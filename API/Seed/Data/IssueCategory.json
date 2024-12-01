@@ -1,0 +1,169 @@
+[
+  {
+    "NameEN": "Electrical Issues",
+    "NameAR": "مشاكل كهربائية",
+    "Key": "electrical_issues",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Power Outage", "NameAR": "انقطاع الكهرباء", "Key": "power_outage" },
+      { "NameEN": "Street Light Malfunction", "NameAR": "خلل في أعمدة الإنارة", "Key": "street_light_malfunction" },
+      { "NameEN": "Electrical Faults", "NameAR": "أعطال كهربائية", "Key": "electrical_faults" },
+      { "NameEN": "Traffic Signal Problems", "NameAR": "مشاكل إشارات المرور", "Key": "traffic_signal_problems" }
+    ]
+  },
+  {
+    "NameEN": "Plumbing Issues",
+    "NameAR": "مشاكل السباكة",
+    "Key": "plumbing_issues",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Leaking Pipes", "NameAR": "تسرب الأنابيب", "Key": "leaking_pipes" },
+      { "NameEN": "Blocked Drains", "NameAR": "انسداد المصارف", "Key": "blocked_drains" },
+      { "NameEN": "Broken Water Mains", "NameAR": "انكسار أنابيب المياه الرئيسية", "Key": "broken_water_mains" },
+      { "NameEN": "Sewer Problems", "NameAR": "مشاكل الصرف الصحي", "Key": "sewer_problems" }
+    ]
+  },
+  {
+    "NameEN": "Waste Management",
+    "NameAR": "إدارة النفايات",
+    "Key": "waste_management",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Overflowing Trash Bins", "NameAR": "صناديق القمامة الممتلئة", "Key": "overflowing_trash_bins" },
+      { "NameEN": "Litter on Streets", "NameAR": "قمامة في الشوارع", "Key": "litter_on_streets" },
+      { "NameEN": "Illegal Dumping", "NameAR": "التخلص غير القانوني من النفايات", "Key": "illegal_dumping" },
+      { "NameEN": "Recycling Issues", "NameAR": "مشاكل إعادة التدوير", "Key": "recycling_issues" }
+    ]
+  },
+  {
+    "NameEN": "Road and Traffic",
+    "NameAR": "الطرق وحركة المرور",
+    "Key": "road_and_traffic",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Potholes", "NameAR": "الحفر", "Key": "potholes" },
+      { "NameEN": "Road Blockages", "NameAR": "انسداد الطرق", "Key": "road_blockages" },
+      { "NameEN": "Missing or Damaged Signs", "NameAR": "اللافتات المفقودة أو التالفة", "Key": "missing_damaged_signs" },
+      { "NameEN": "Road Surface Damage", "NameAR": "أضرار سطح الطريق", "Key": "road_surface_damage" },
+      { "NameEN": "Traffic Congestion", "NameAR": "ازدحام مروري", "Key": "traffic_congestion" }
+    ]
+  },
+  {
+    "NameEN": "Public Safety",
+    "NameAR": "السلامة العامة",
+    "Key": "public_safety",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Crime Reporting", "NameAR": "الإبلاغ عن الجرائم", "Key": "crime_reporting" },
+      { "NameEN": "Suspicious Activity", "NameAR": "نشاط مريب", "Key": "suspicious_activity" },
+      { "NameEN": "Vandalism", "NameAR": "التخريب", "Key": "vandalism" },
+      { "NameEN": "Public Disturbance", "NameAR": "الإزعاج العام", "Key": "public_disturbance" },
+      { "NameEN": "Hazardous Materials", "NameAR": "المواد الخطرة", "Key": "hazardous_materials" }
+    ]
+  },
+  {
+    "NameEN": "Parks and Recreation",
+    "NameAR": "الحدائق والترفيه",
+    "Key": "parks_and_recreation",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Broken Playground Equipment", "NameAR": "معدات ملعب مكسورة", "Key": "broken_playground_equipment" },
+      { "NameEN": "Maintenance Issues in Parks", "NameAR": "مشاكل الصيانة في الحدائق", "Key": "maintenance_issues_parks" },
+      { "NameEN": "Litter in Parks", "NameAR": "القمامة في الحدائق", "Key": "litter_in_parks" },
+      { "NameEN": "Invasive Plant Species", "NameAR": "أنواع النباتات الغازية", "Key": "invasive_plant_species" }
+    ]
+  },
+  {
+    "NameEN": "Public Transportation",
+    "NameAR": "النقل العام",
+    "Key": "public_transportation",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Bus Stop Issues", "NameAR": "مشاكل محطات الحافلات", "Key": "bus_stop_issues" },
+      { "NameEN": "Train Service Problems", "NameAR": "مشاكل خدمات القطارات", "Key": "train_service_problems" },
+      { "NameEN": "Delayed or Canceled Services", "NameAR": "الخدمات المؤجلة أو الملغاة", "Key": "delayed_canceled_services" },
+      { "NameEN": "Accessibility Issues", "NameAR": "مشاكل إمكانية الوصول", "Key": "accessibility_issues" }
+    ]
+  },
+  {
+    "NameEN": "Environmental Concerns",
+    "NameAR": "القضايا البيئية",
+    "Key": "environmental_concerns",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Pollution Reports", "NameAR": "تقارير التلوث", "Key": "pollution_reports" },
+      { "NameEN": "Noise Complaints", "NameAR": "شكاوى الضوضاء", "Key": "noise_complaints" },
+      { "NameEN": "Wildlife Issues", "NameAR": "مشاكل الحياة البرية", "Key": "wildlife_issues" },
+      { "NameEN": "Hazardous Waste Concerns", "NameAR": "مشاكل النفايات الخطرة", "Key": "hazardous_waste_concerns" }
+    ]
+  },
+  {
+    "NameEN": "Infrastructure",
+    "NameAR": "البنية التحتية",
+    "Key": "infrastructure",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Building Code Violations", "NameAR": "انتهاكات كود البناء", "Key": "building_code_violations" },
+      { "NameEN": "Sidewalk Damage", "NameAR": "أضرار الأرصفة", "Key": "sidewalk_damage" },
+      { "NameEN": "Accessibility Issues", "NameAR": "مشاكل إمكانية الوصول", "Key": "accessibility_issues_infrastructure" },
+      { "NameEN": "Public Restroom Problems", "NameAR": "مشاكل الحمامات العامة", "Key": "public_restroom_problems" }
+    ]
+  },
+  {
+    "NameEN": "Community Services",
+    "NameAR": "خدمات المجتمع",
+    "Key": "community_services",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Homelessness and Social Services", "NameAR": "التشرد والخدمات الاجتماعية", "Key": "homelessness_social_services" },
+      { "NameEN": "Community Events", "NameAR": "فعاليات المجتمع", "Key": "community_events" },
+      { "NameEN": "Local Business Concerns", "NameAR": "مشاكل الأعمال المحلية", "Key": "local_business_concerns" },
+      { "NameEN": "Volunteer Opportunities", "NameAR": "فرص التطوع", "Key": "volunteer_opportunities" }
+    ]
+  },
+  {
+    "NameEN": "Health and Safety",
+    "NameAR": "الصحة والسلامة",
+    "Key": "health_and_safety",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Food Safety Complaints", "NameAR": "شكاوى سلامة الغذاء", "Key": "food_safety_complaints" },
+      { "NameEN": "Public Health Issues", "NameAR": "مشاكل الصحة العامة", "Key": "public_health_issues" },
+      { "NameEN": "Epidemic Concerns", "NameAR": "مشاكل الوباء", "Key": "epidemic_concerns" },
+      { "NameEN": "Emergency Services Issues", "NameAR": "مشاكل خدمات الطوارئ", "Key": "emergency_services_issues" }
+    ]
+  },
+  {
+    "NameEN": "Public Events",
+    "NameAR": "الأحداث العامة",
+    "Key": "public_events",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Event Coordination Issues", "NameAR": "مشاكل تنسيق الفعاليات", "Key": "event_coordination_issues" },
+      { "NameEN": "Noise Complaints Related to Events", "NameAR": "شكاوى الضوضاء المتعلقة بالفعاليات", "Key": "noise_complaints_events" },
+      { "NameEN": "Safety Concerns at Events", "NameAR": "مشاكل السلامة في الفعاليات", "Key": "safety_concerns_events" }
+    ]
+  },
+  {
+    "NameEN": "Technology and Connectivity",
+    "NameAR": "التكنولوجيا والاتصال",
+    "Key": "technology_connectivity",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "Internet Service Issues", "NameAR": "مشاكل خدمة الإنترنت", "Key": "internet_service_issues" },
+      { "NameEN": "Public Wi-Fi Problems", "NameAR": "مشاكل الواي فاي العامة", "Key": "public_wifi_problems" },
+      { "NameEN": "Technology Access Issues", "NameAR": "مشاكل الوصول إلى التكنولوجيا", "Key": "technology_access_issues" }
+    ]
+  },
+  {
+    "NameEN": "Miscellaneous",
+    "NameAR": "متنوع",
+    "Key": "miscellaneous",
+    "ParentId": null,
+    "Subcategories": [
+      { "NameEN": "General Feedback or Suggestions", "NameAR": "تعليقات أو اقتراحات عامة", "Key": "general_feedback" },
+      { "NameEN": "Lost and Found", "NameAR": "المفقودات والمعثور عليها", "Key": "lost_and_found" },
+      { "NameEN": "Other", "NameAR": "أخرى", "Key": "other" }
+    ]
+  }
+]
