@@ -1,5 +1,6 @@
 using API.Data;
 using API.Extensions;
+using API.Middlewares;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
@@ -23,6 +24,10 @@ builder.Services.AddCors();
 builder.Services.AddIdentityServices(builder.Configuration);
 
 builder.Services.AddSignalR();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 
 
 var app = builder.Build();
@@ -59,11 +64,28 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+
+
+app.UseAuthentication();
+
 app.UseHttpsRedirection();
 
-app.Run();
+app.UseAuthorization();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+
+app.UseStaticFiles();
+app.UseDefaultFiles();
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+
+app.MapControllers();
+
+app.UseExceptionHandler();
+
+app.MapFallbackToController("Index", "Fallback");
+
+
+
+app.Run();
