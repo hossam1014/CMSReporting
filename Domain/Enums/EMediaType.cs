@@ -1,6 +1,6 @@
 namespace Domain.Enums
 {
-    public enum MediaType
+    public enum EMediaType
     {
         Photo,
         Video

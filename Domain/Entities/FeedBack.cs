@@ -13,7 +13,7 @@ namespace Domain.Entities
 
         public DateTime Date { get; set; }
 
-        public int UserId { get; set; }
-        public MobileUser User { get; set; }
+        public string MobileUserId { get; set; }
+        public MobileUser MobileUser { get; set; }
     }
 }

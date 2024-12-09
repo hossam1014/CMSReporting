@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities
 {
-    public class AppRole: IdentityRole<int>
+    public class AppRole: IdentityRole
     {
         [MaxLength(100)]
         public string NameAR { get; set; }

@@ -15,6 +15,9 @@ namespace Infrastructure.Data.EntitiesConfig
             builder.Property(x => x.FullName).HasMaxLength(100);
             builder.Property(x => x.Email).HasMaxLength(100);
             builder.Property(x => x.PhoneNumber).HasMaxLength(20);
+
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
         }
     }
 }

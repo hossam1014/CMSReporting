@@ -10,7 +10,7 @@ namespace Domain.Entities
         public int NotificationId { get; set; }
         public Notification Notification { get; set; }
 
-        public int UserId { get; set; }
-        public MobileUser User { get; set; }
+        public string MobileUserId { get; set; }
+        public MobileUser MobileUser { get; set; }
     }
 }

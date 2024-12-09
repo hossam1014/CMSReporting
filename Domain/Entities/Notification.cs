@@ -12,10 +12,10 @@ namespace Domain.Entities
         public string ContentAR { get; set; }
         public string ContentEN { get; set; }
 
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
         public AppUser User { get; set; } // who made the notification
 
-        public int? UserRecievedId { get; set; }
+        public string UserRecievedId { get; set; }
         public MobileUser UserRecieved { get; set; } // who recieved
 
         public int? IssueReportId { get; set; }

@@ -13,7 +13,7 @@ namespace Domain.Entities
         public int IssueCategoryId { get; set; }
         public IssueCategory IssueCategory { get; set; }
 
-        public int MobileUserId { get; set; }
+        public string MobileUserId { get; set; }
         public MobileUser MobileUser { get; set; }
 
         public EReportStatus ReportStatus { get; set; }

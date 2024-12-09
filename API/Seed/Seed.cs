@@ -11,7 +11,7 @@ namespace API.Data
     public static async Task SeedData(DataContext context)
     {
 
-      // await ReadData<IssueCategory>("IssueCategory", context);
+      await ReadData<IssueCategory>("IssueCategory", context);
 
 
     }

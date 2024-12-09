@@ -13,8 +13,8 @@ namespace Domain.Entities
         
         public EReportStatus ReportStatus { get; set; }
 
-        public int DashboardUserId { get; set; }
-        public DashboardUser DashboardUser { get; set; }
+        public string UserId { get; set; }
+        public AppUser User { get; set; }
 
         public DateTime CreatedAt { get; set; }
     }

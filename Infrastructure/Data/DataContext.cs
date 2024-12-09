@@ -13,17 +13,16 @@ namespace Infrastructure.Data
 {
     public class DataContext : IdentityDbContext<AppUser,
                                                     AppRole,
-                                                    int,
-                                                    IdentityUserClaim<int>,
+                                                    string,
+                                                    IdentityUserClaim<string>,
                                                     AppUserRole,
-                                                    IdentityUserLogin<int>,
-                                                    IdentityRoleClaim<int>,
-                                                    IdentityUserToken<int>>
+                                                    IdentityUserLogin<string>,
+                                                    IdentityRoleClaim<string>,
+                                                    IdentityUserToken<string>>
     {
         public DataContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<DashboardUser> DashboardUsers { get; set; }
         public DbSet<MobileUser> MobileUsers { get; set; }
         public DbSet<EmergencyReport> EmergencyReports { get; set; }
         public DbSet<EmergencyService> EmergencyServices { get; set; }
