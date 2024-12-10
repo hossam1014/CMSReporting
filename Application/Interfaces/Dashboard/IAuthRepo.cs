@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Dashboard
 {
-    public class test
+    public interface IAuthRepo
     {
-        
+        public Task<string> Login(string email, string password);
     }
 }

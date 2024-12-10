@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Interfaces.Dashboard;
 using Application.Interfaces.MobileApp;
 using AutoMapper;
 using Domain.Entities;
@@ -16,6 +17,7 @@ namespace Application.Interfaces
         IMReportRepo MReportRepo { get; }
         IMNotificationRepo MNotificationRepo { get; }
         IMEmergencyReportRepo MEmergencyReportRepo { get; }
+        IAuthRepo AuthRepo { get; }
 
         IBaseRepo<TEntity> BaseRepo<TEntity>() where TEntity : BaseEntity;
 

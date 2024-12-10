@@ -1,12 +1,15 @@
 using System.Collections;
 using API.Repository;
 using Application.Interfaces;
+using Application.Interfaces.Dashboard;
 using Application.Interfaces.MobileApp;
+using Application.Repositories.Dashboard;
 using Application.Repositories.MobileApp;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Repositories.MobileApp;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 
 namespace API.Data.Repository
@@ -19,18 +22,26 @@ namespace API.Data.Repository
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
+        private readonly UserManager<AppUser> _userManager;
+        private readonly ITokenService _tokenService;
+
         public UnitOfWork(DataContext context, IMapper mapper,
-            IHostEnvironment hostEnvironment)
+            IHostEnvironment hostEnvironment,
+            UserManager<AppUser> userManager,
+            ITokenService tokenService)
         {
             _hostEnvironment = hostEnvironment;
             _mapper = mapper;
             _context = context;
+            _userManager = userManager;
+            _tokenService = tokenService;
         }
 
         public IMapper Mapper => _mapper;
         public IMReportRepo MReportRepo => new MReportRepo(_context, _mapper);
         public IMNotificationRepo MNotificationRepo => new MNotificationRepo(_context, _mapper);
         public IMEmergencyReportRepo MEmergencyReportRepo => new MEmergencyReportRepo(_context, _mapper);
+        public IAuthRepo AuthRepo => new AuthRepo(_context, _tokenService, _userManager);
 
 
         public async Task<bool> SaveAsync()
