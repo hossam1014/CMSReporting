@@ -29,7 +29,7 @@ namespace Application.Abstractions
 
         public static Result<TValue> Success<TValue>(TValue value) => new(true, value, Error.None);
 
-        public static Result<TValue> Fail<TValue>(Error error) => new(false, default, error);
+        public static Result<TValue> Failure<TValue>(Error error) => new(false, default, error);
 
 
     }

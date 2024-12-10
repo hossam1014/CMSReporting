@@ -41,52 +41,20 @@ namespace API.Extensions
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = config["JwtTokenKey:ValidIssuer"],
+                    ValidAudience = config["JwtTokenKey:ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtTokenKey:Secret"])),
                 };
 
-
-                // options.Events = new JwtBearerEvents
-                // {
-                //     OnMessageReceived = context =>
-                //         {
-                //             var accessToken = context.Request.Query["access_token"];
-
-                //             var path = context.HttpContext.Request.Path;
-                //             if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
-                //             {
-                //                 context.Token = accessToken;
-                //             }
-
-                //             return Task.CompletedTask;
-
-                //         }
-                // };
 
             });
 
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-                opt.AddPolicy("MobileUsersPolicy", policy => policy.RequireRole("MobileUsers", "Admin"));
-                opt.AddPolicy("BannersPolicy", policy => policy.RequireRole("Banners", "Admin"));
-                opt.AddPolicy("ClaimSourcesPolicy", policy => policy.RequireRole("ClaimSources", "Admin"));
-                opt.AddPolicy("UserManagementPolicy", policy => policy.RequireRole("UserManagement", "Admin"));
-                opt.AddPolicy("MenuManagementPolicy", policy => policy.RequireRole("MenuManagement", "Admin"));
-                opt.AddPolicy("NotificationsPolicy", policy => policy.RequireRole("Notifications", "Admin"));
-                opt.AddPolicy("ExplorePolicy", policy => policy.RequireRole("Explore", "Admin"));
-                opt.AddPolicy("RatingsPolicy", policy => policy.RequireRole("Ratings", "Admin"));
-                opt.AddPolicy("UserRewardsPolicy", policy => policy.RequireRole("UserRewards", "Admin"));
-                opt.AddPolicy("ShopRewardsPolicy", policy => policy.RequireRole("ShopRewards", "Admin"));
-                opt.AddPolicy("SingleShopRewardsPolicy", policy => policy.RequireRole("MyShopRewards", "Admin"));
-                opt.AddPolicy("ShopsPolicy", policy => policy.RequireRole("Shops", "Admin"));
-                opt.AddPolicy("UpdateShopPolicy", policy => policy.RequireRole("Shops", "Admin"));
-                opt.AddPolicy("UpdateShopInfoPolicy", policy => policy.RequireRole("ShopInfo", "Admin"));
-                opt.AddPolicy("ShopsNamesPolicy", policy => policy.RequireRole("Banners", "Shops", "Admin"));
-                opt.AddPolicy("ShopTypesPolicy", policy => policy.RequireRole("ShopInfo", "Shops", "Admin"));
-                opt.AddPolicy("RewardExchangePolicy", policy => policy.RequireRole("RewardExchange", "Admin"));
-                opt.AddPolicy("MobileUserPolicy", policy => policy.RequireRole("MobileUser"));
 
             });
 

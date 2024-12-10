@@ -156,6 +156,12 @@
     ]
   },
   {
+    "NameAR": "طوارئ",
+    "NameEN": "Emergency",
+    "Key": "emergency",
+    "ParentId": null
+  },
+  {
     "NameEN": "Miscellaneous",
     "NameAR": "متنوع",
     "Key": "miscellaneous",

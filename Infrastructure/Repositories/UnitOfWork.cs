@@ -1,9 +1,12 @@
 using System.Collections;
 using API.Repository;
 using Application.Interfaces;
+using Application.Interfaces.MobileApp;
+using Application.Repositories.MobileApp;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Data;
+using Infrastructure.Repositories.MobileApp;
 using Microsoft.Extensions.Hosting;
 
 namespace API.Data.Repository
@@ -25,7 +28,9 @@ namespace API.Data.Repository
         }
 
         public IMapper Mapper => _mapper;
-
+        public IMReportRepo MReportRepo => new MReportRepo(_context, _mapper);
+        public IMNotificationRepo MNotificationRepo => new MNotificationRepo(_context, _mapper);
+        public IMEmergencyReportRepo MEmergencyReportRepo => new MEmergencyReportRepo(_context, _mapper);
 
 
         public async Task<bool> SaveAsync()

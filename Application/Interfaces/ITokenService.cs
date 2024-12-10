@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface ITokenService
     {
-        Task<string> CreateToken(AppUser user);
+        Task<(string token, int expiresIn)> CreateToken(AppUser user);
     }
 }

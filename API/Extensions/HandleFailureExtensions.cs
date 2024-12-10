@@ -10,22 +10,26 @@ namespace API.Extensions
 {
     public static class HandleFailureExtensions
     {
-        public static IActionResult HandleFailure(this Result result) =>
-            result switch
-            {
-                { IsSuccess: true } => new BadRequestResult(),
+        public static ObjectResult HandleFailure(this Result result, int statusCode)
+        {
+            if (result.IsSuccess) return new ObjectResult("");
 
-                // if the result is type of IValidationResult instence
-                // IValidationResult validationResult =>
-                //     new BadRequestObjectResult(
-                //         CreateProblemDetails("ValidationError", StatusCodes.Status400BadRequest,
-                //             result.Error, validationResult.Errors)
-                //     ),
+            var problem = Results.Problem(statusCode: statusCode);
+            
+            var problemDetails = problem.GetType().GetProperty("ProblemDetails")?.GetValue(problem) as ProblemDetails;
 
-                _ => new BadRequestObjectResult(
-                        CreateProblemDetails(result.Error)
-                    )
-            };
+            problemDetails.Detail = result.Error.Description;
+            
+
+            // if the result is type of IValidationResult instence
+            // IValidationResult validationResult =>
+            //     new BadRequestObjectResult(
+            //         CreateProblemDetails("ValidationError", StatusCodes.Status400BadRequest,
+            //             result.Error, validationResult.Errors)
+            //     ),
+
+            return new BadRequestObjectResult(problemDetails);
+        }
 
 
         private static ProblemDetails CreateProblemDetails(Error error
