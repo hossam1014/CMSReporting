@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Repository;
 using Application.Abstractions;
 using Application.Contracts.MobileApp.MReport;
+using Application.Errors.Auth;
 using Application.Errors.MobileApp.MReport;
 using Application.Interfaces;
 using Application.Interfaces.MobileApp;
@@ -29,8 +30,11 @@ namespace Application.Repositories.MobileApp
             var reportCategory = await _context.IssueCategories.AsNoTracking().FirstOrDefaultAsync(x => x.Key == addReport.IssueCategoryKey);
             if (reportCategory == null) return Result.Failure<MReportResponse>(MReportErrors.CategoryNotFound);
 
+            var isUserExist = await _context.MobileUsers.AnyAsync(x => x.Id == addReport.MobileUserId);
+            if (!isUserExist) return Result.Failure(AuthErrors.UserNotFound);
+
             // handle the image
-            var imageUrl = string.Empty;
+            string imageUrl = null;
 
             var report = _mapper.Map<IssueReport>(addReport);
             report.IssueCategoryId = reportCategory.Id;

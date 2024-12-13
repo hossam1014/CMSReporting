@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 
 namespace Application.Contracts.MobileApp.MReport
 {
-    public record MReportResponse(
-        string Description,
-        string IssueCategoryAR,
-        string IssueCategoryEN,
-        DateTime DateIssued,
-        string ReportStatus,
-        string Latitude,
-        string Longitude,
-        string Address
-    );
+    public class MReportResponse
+    {
+        public string Description { get; init; }
+        public string IssueCategoryAR { get; init; }
+        public string IssueCategoryEN { get; init; }
+        public DateTime DateIssued { get; init; }
+        public string ReportStatus { get; init; }
+        public double Latitude { get; init; }
+        public double Longitude { get; init; }
+        public string Address { get; init; }
+    }
 }

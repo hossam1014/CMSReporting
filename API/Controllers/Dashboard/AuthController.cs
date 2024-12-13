@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
-using Application.Contracts.DashboardAuth.Login;
+using Application.Contracts.Auth.Login;
 using Application.Interfaces;
+using Application.Interfaces.Dashboard;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,10 +14,10 @@ namespace API.Controllers.Dashboard
     // localhost:5000/api/Auth
     public class AuthController : BaseApiController
     {
-        private readonly IUnitOfWork _uow;
-        public AuthController(IUnitOfWork uow)
+        private readonly IAuthRepo _authRepo;
+        public AuthController(IAuthRepo authRepo)
         {
-            _uow = uow;
+            _authRepo = authRepo;
         }
 
 
@@ -24,7 +25,7 @@ namespace API.Controllers.Dashboard
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var result = await _uow.AuthRepo.Login(request);
+            var result = await _authRepo.Login(request);
 
             return result.Match(
                 onSuccess : () => Ok(result),

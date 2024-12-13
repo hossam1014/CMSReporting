@@ -14,6 +14,6 @@ namespace Application.Interfaces.Dashboard
     {
         Task<Result<PagedList<ReportResponse>>> GetAllReports(BaseParams reportParams);
         Task<Result<ReportResponse>> GetReportById(int id);
-        Task<Result<ReportResponse>> UpdateReportStatus(ChangeReportStatus changeReportStatus);
+        Task<Result> UpdateReportStatus(ChangeReportStatus changeReportStatus);
     }
 }

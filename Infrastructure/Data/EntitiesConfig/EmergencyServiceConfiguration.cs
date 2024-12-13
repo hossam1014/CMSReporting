@@ -12,7 +12,8 @@ namespace Infrastructure.Data.EntitiesConfig
     {
         public void Configure(EntityTypeBuilder<EmergencyService> builder)
         {
-            builder.Property(x => x.Name).HasMaxLength(100);
+            builder.Property(x => x.NameAR).HasMaxLength(100);
+            builder.Property(x => x.NameEN).HasMaxLength(100);
             builder.Property(x => x.ContactNumber).HasMaxLength(20);
             builder.Property(x => x.Address).HasMaxLength(100);
         }

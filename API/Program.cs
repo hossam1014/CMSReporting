@@ -1,6 +1,7 @@
 using API.Data;
 using API.Extensions;
 using API.Middlewares;
+using Application;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
 
 
@@ -58,11 +60,11 @@ using (IServiceScope scope = app.Services.CreateScope())
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 app.UseRouting();
 

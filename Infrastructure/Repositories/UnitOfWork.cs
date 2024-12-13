@@ -10,6 +10,7 @@ using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Repositories.Dashboard;
 using Infrastructure.Repositories.MobileApp;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 
@@ -22,29 +23,23 @@ namespace API.Data.Repository
         private Hashtable _repositories;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        private readonly UserManager<AppUser> _userManager;
-        private readonly ITokenService _tokenService;
 
         public UnitOfWork(DataContext context, IMapper mapper,
-            IHostEnvironment hostEnvironment,
-            UserManager<AppUser> userManager,
-            ITokenService tokenService)
+            IHostEnvironment hostEnvironment, IHttpContextAccessor httpContextAccessor)
         {
             _hostEnvironment = hostEnvironment;
             _mapper = mapper;
             _context = context;
-            _userManager = userManager;
-            _tokenService = tokenService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IMapper Mapper => _mapper;
         public IMReportRepo MReportRepo => new MReportRepo(_context, _mapper);
         public IMNotificationRepo MNotificationRepo => new MNotificationRepo(_context, _mapper);
         public IMEmergencyReportRepo MEmergencyReportRepo => new MEmergencyReportRepo(_context, _mapper);
-        public IAuthRepo AuthRepo => new AuthRepo(_tokenService, _userManager);
-
-        public IReportRepo ReportRepo => new ReportRepo(_context, _mapper);
+        public IReportRepo ReportRepo => new ReportRepo(_context, _mapper, _httpContextAccessor);
 
 
         public async Task<bool> SaveAsync()

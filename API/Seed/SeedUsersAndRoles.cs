@@ -27,6 +27,7 @@ namespace API.Data
             {
                 var User = new AppUser
                 {
+                    Email = "test@gmail.com",
                     FullName = "Test",
                     UserName = "Test",
                 };

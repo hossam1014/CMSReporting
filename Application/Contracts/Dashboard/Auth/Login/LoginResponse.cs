@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.Contracts.DashboardAuth.Login
+namespace Application.Contracts.Auth.Login
 {
     public record LoginResponse(
         string Id,

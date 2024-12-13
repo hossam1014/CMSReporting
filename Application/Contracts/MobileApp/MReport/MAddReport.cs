@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Http;
 namespace Application.Contracts.MobileApp.MReport
 {
     public record MAddReport(
+        string MobileUserId,
         string Description,
         string IssueCategoryKey,
         IFormFile Image,
-        string Latitude,
-        string Longitude,
+        double Latitude,
+        double Longitude,
         string Address
     );
 }

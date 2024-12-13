@@ -26,10 +26,11 @@ namespace Infrastructure.Repositories.Dashboard
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ReportRepo(DataContext context, IMapper mapper)
+        public ReportRepo(DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task<Result<PagedList<ReportResponse>>> GetAllReports(BaseParams reportParams)
         {
@@ -54,9 +55,9 @@ namespace Infrastructure.Repositories.Dashboard
 
         }
 
-        public async Task<Result<ReportResponse>> UpdateReportStatus(ChangeReportStatus changeReportStatus)
+        public async Task<Result> UpdateReportStatus(ChangeReportStatus changeReportStatus)
         {
-            var userId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
             if (userId == null) return Result.Failure<ReportResponse>(AuthErrors.Unauthorized);
 
             var report = await _context.IssueReports.FirstOrDefaultAsync(x => x.Id == changeReportStatus.ReportId);
@@ -77,7 +78,7 @@ namespace Infrastructure.Repositories.Dashboard
 
             await _context.SaveChangesAsync();
 
-            return Result.Success(_mapper.Map<ReportResponse>(report));
+            return Result.Success();
         }
 
         public async Task<Result<ReportResponse>> DeleteReport(int id)

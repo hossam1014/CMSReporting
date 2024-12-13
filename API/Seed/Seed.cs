@@ -12,6 +12,7 @@ namespace API.Data
     {
 
       await ReadData<IssueCategory>("IssueCategory", context);
+      await ReadData<EmergencyService>("EmergencyService", context);
 
 
     }

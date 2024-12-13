@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Abstractions;
-using Application.Contracts.DashboardAuth.Login;
+using Application.Contracts.Auth.Login;
 
 namespace Application.Interfaces.Dashboard
 {

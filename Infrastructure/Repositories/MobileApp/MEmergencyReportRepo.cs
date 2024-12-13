@@ -30,6 +30,7 @@ namespace Infrastructure.Repositories.MobileApp
 
             var report = _mapper.Map<EmergencyReport>(addReport);
             report.IssueCategoryId = reportCategory.Id;
+            report.DateIssued = DateTime.UtcNow;
 
             await _context.EmergencyReports.AddAsync(report);
             await _context.SaveChangesAsync();

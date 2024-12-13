@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 namespace Application.Contracts.MobileApp.MReport
 {
     public record MAddEmergencyReport(
-        int EmergencyServiceId
+        string MobileUserId,
+        int EmergencyServiceId,
+        double Latitude,
+        double Longitude,
+        string Address
     );
+
 }
