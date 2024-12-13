@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Abstractions;
+using Application.Contracts.DashboardAuth.Login;
 
 namespace Application.Interfaces.Dashboard
 {
     public interface IAuthRepo
     {
-        public Task<string> Login(string email, string password);
+        Task<Result<LoginResponse>> Login(LoginRequest request);
     }
 }

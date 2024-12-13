@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Abstractions;
+using Application.Contracts.DashboardAuth.Login;
+using Application.Errors.Auth;
 using Application.Interfaces;
 using Application.Interfaces.Dashboard;
 using Domain.Entities;
@@ -13,32 +16,38 @@ namespace Application.Repositories.Dashboard
 {
     public class AuthRepo : IAuthRepo
     {
-        private readonly DataContext _context;
         private readonly ITokenService _tokenService;
         private readonly UserManager<AppUser> _userManager;
-        public AuthRepo(DataContext dataContext, ITokenService tokenService, UserManager<AppUser> userManager)
+        public AuthRepo(ITokenService tokenService, UserManager<AppUser> userManager)
         {
-            _context = dataContext;
             _tokenService = tokenService;
             _userManager = userManager;
         }
-        public async Task<string> Login(string email, string password)
+        public async Task<Result<LoginResponse>> Login(LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
-            {
-                return null;
-            }
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
-            var result = await _userManager.CheckPasswordAsync(user, password);
-            if (result == false)
-            {
-                return null;
-            }
+            if (user is null) return Result.Failure<LoginResponse>(AuthErrors.UserNotFound);
 
-            var tokenResult = await _tokenService.CreateToken(user);
+            var checkPasswordResult = await _userManager.CheckPasswordAsync(user, request.Password);
 
-            return tokenResult.token;
+            if (!checkPasswordResult) return Result.Failure<LoginResponse>(AuthErrors.InvalidCredentials);
+
+            // if (!user.PhoneNumberConfirmed)
+            // {
+            //     return await SendCode(user.PhoneNumber);
+            // }
+
+            var result = new LoginResponse(
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    (await _tokenService.CreateToken(user)).token,
+                    (await _tokenService.CreateToken(user)).expiresIn,
+                    null
+                    );
+
+            return Result.Success(result);
         }
     }
 }

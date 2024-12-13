@@ -18,6 +18,7 @@ namespace Application.Interfaces
         IMNotificationRepo MNotificationRepo { get; }
         IMEmergencyReportRepo MEmergencyReportRepo { get; }
         IAuthRepo AuthRepo { get; }
+        IReportRepo ReportRepo { get; }
 
         IBaseRepo<TEntity> BaseRepo<TEntity>() where TEntity : BaseEntity;
 

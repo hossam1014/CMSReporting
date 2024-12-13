@@ -8,6 +8,7 @@ using Application.Repositories.MobileApp;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Data;
+using Infrastructure.Repositories.Dashboard;
 using Infrastructure.Repositories.MobileApp;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
@@ -41,7 +42,9 @@ namespace API.Data.Repository
         public IMReportRepo MReportRepo => new MReportRepo(_context, _mapper);
         public IMNotificationRepo MNotificationRepo => new MNotificationRepo(_context, _mapper);
         public IMEmergencyReportRepo MEmergencyReportRepo => new MEmergencyReportRepo(_context, _mapper);
-        public IAuthRepo AuthRepo => new AuthRepo(_context, _tokenService, _userManager);
+        public IAuthRepo AuthRepo => new AuthRepo(_tokenService, _userManager);
+
+        public IReportRepo ReportRepo => new ReportRepo(_context, _mapper);
 
 
         public async Task<bool> SaveAsync()
