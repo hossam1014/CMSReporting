@@ -9,54 +9,77 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Repository
 {
-  public class BaseRepo<T> : IBaseRepo<T> where T : BaseEntity
+  public class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEntity : BaseEntity
     //  where TEntity : class, BaseEntity
   {
 
     protected readonly DataContext _context;
-    protected readonly DbSet<T> _dbSet;
+    protected readonly DbSet<TEntity> _dbSet;
+    private readonly IMapper _mapper;
 
-    public BaseRepo(DataContext context)
+    public BaseRepo(DataContext context, IMapper mapper)
     {
       _context = context;
-      _dbSet = _context.Set<T>();
+      _dbSet = _context.Set<TEntity>();
+      _mapper = mapper;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public TEntity Add(TEntity entity)
     {
-      return await _dbSet.ToListAsync();
+      _context.Set<TEntity>().Add(entity);
+      return entity;
     }
 
-    public async Task<T?> GetByIdAsync(object id)
+    public Task AddRange(List<TEntity> entities)
     {
-      return await _dbSet.FindAsync(id);
+      _context.Set<TEntity>().AddRange(entities);
+      return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    public Task Update(TEntity entity)
     {
-      return await _dbSet.Where(predicate).ToListAsync();
+      _context.Update<TEntity>(entity);
+      return Task.CompletedTask;
     }
 
-    public async Task AddAsync(T entity)
+    public Task Remove(TEntity entity)
     {
-      await _dbSet.AddAsync(entity);
-      await _context.SaveChangesAsync();
+      _context.Set<TEntity>().Remove(entity);
+      return Task.CompletedTask;
     }
 
-    public async Task UpdateAsync(T entity)
+    public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-      _dbSet.Update(entity);
-      await _context.SaveChangesAsync();
+      return await _context.Set<TEntity>().ToListAsync();
     }
-
-    public async Task DeleteAsync(object id)
+    public async Task<IEnumerable<TEntity>> GetAllByAsync(Expression<Func<TEntity, bool>> expression)
     {
-      var entity = await GetByIdAsync(id);
-      if (entity != null)
-      {
-        _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
-      }
+      return await _context.Set<TEntity>().Where(expression).ToListAsync();
+    }
+    public async Task<bool> CheckExist(Expression<Func<TEntity, bool>> expression)
+    {
+      return await _context.Set<TEntity>().AnyAsync(expression);
+    }
+    public async Task<IEnumerable<T>> Map_GetAllAsync<T>()
+    {
+      return await _context.Set<TEntity>()
+          .ProjectTo<T>(_mapper.ConfigurationProvider)
+          .ToListAsync();
+    }
+    public async Task<IEnumerable<T>> Map_GetAllByAsync<T>(Expression<Func<TEntity, bool>> expression)
+    {
+      return await _context.Set<TEntity>()
+          .Where(expression)
+          // .OrderByDescending(x => x.Id)
+          .ProjectTo<T>(_mapper.ConfigurationProvider)
+          .ToListAsync();
+    }
+    public async Task<T> Map_GetByAsync<T>(Expression<Func<TEntity, bool>> expression)
+    {
+      return await _context.Set<TEntity>()
+          .Where(expression)
+          .ProjectTo<T>(_mapper.ConfigurationProvider)
+          .FirstOrDefaultAsync();
     }
 
   }
