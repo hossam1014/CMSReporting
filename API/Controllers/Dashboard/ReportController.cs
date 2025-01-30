@@ -6,22 +6,23 @@ using API.Extensions;
 using Application.Contracts.Dashboard.Report;
 using Application.Helpers.FilterParams;
 using Application.Interfaces;
+using Application.Interfaces.Dashboard;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Dashboard
 {
     public class ReportController: BaseApiController
     {
-        private readonly IUnitOfWork _uow;
-        public ReportController(IUnitOfWork uow)
+        private readonly IReportRepo _reportRepo;
+        public ReportController(IReportRepo reportRepo)
         {
-            _uow = uow;
+            _reportRepo = reportRepo;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetReports([FromQuery] BaseParams reportParams)
         {
-            var result = await _uow.ReportRepo.GetAllReports(reportParams);
+            var result = await _reportRepo.GetAllReports(reportParams);
 
             return result.Match(
                 onSuccess : () => Ok(result),
@@ -32,7 +33,7 @@ namespace API.Controllers.Dashboard
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReportById(int id)
         {
-            var result = await _uow.ReportRepo.GetReportById(id);
+            var result = await _reportRepo.GetReportById(id);
 
             return result.Match(
                 onSuccess : () => Ok(result),
@@ -43,7 +44,7 @@ namespace API.Controllers.Dashboard
         [HttpPut]
         public async Task<IActionResult> UpdateReportStatus(ChangeReportStatus changeReportStatus)
         {
-            var result = await _uow.ReportRepo.UpdateReportStatus(changeReportStatus);
+            var result = await _reportRepo.UpdateReportStatus(changeReportStatus);
 
             return result.Match(
                 onSuccess : () => Ok(result),

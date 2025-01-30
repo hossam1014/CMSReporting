@@ -5,22 +5,23 @@ using System.Threading.Tasks;
 using API.Extensions;
 using Application.Contracts.MobileApp.MReport;
 using Application.Interfaces;
+using Application.Interfaces.MobileApp;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.MobileApp
 {
     public class MEmergencyReportController: BaseApiController
     {
-        private readonly IUnitOfWork _uow;
-        public MEmergencyReportController(IUnitOfWork uow)
+        private readonly IMEmergencyReportRepo _emergencyReportRepo;
+        public MEmergencyReportController(IMEmergencyReportRepo emergencyReportRepo)
         {
-            _uow = uow;
+            _emergencyReportRepo = emergencyReportRepo;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddReport(MAddEmergencyReport addReport)
         {
-            var result = await _uow.MEmergencyReportRepo.AddEmergencyReportAsync(addReport);
+            var result = await _emergencyReportRepo.AddEmergencyReportAsync(addReport);
 
             return result.Match(
                 onSuccess : () => Ok(result),

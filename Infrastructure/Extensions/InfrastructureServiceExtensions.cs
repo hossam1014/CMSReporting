@@ -1,10 +1,12 @@
-using API.Data.Repository;
 using Application.Helpers;
 using Application.Interfaces;
 using Application.Interfaces.Dashboard;
+using Application.Interfaces.MobileApp;
 using Application.Repositories.Dashboard;
 using Infrastructure.Data;
 using Infrastructure.Models;
+using Infrastructure.Repositories.Dashboard;
+using Infrastructure.Repositories.MobileApp;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +20,7 @@ namespace Infrastructure.Extensions
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
       IConfiguration config)
     {
-      services.AddScoped<IUnitOfWork, UnitOfWork>();
+      // services.AddScoped<IUnitOfWork, UnitOfWork>();
       services.AddScoped<ITokenService, TokenService>();
       services.AddScoped<IAuthRepo, AuthRepo>();
 
@@ -32,6 +34,13 @@ namespace Infrastructure.Extensions
       {
         options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
       });
+
+
+
+      // Repositories
+      services.AddScoped<IReportRepo, ReportRepo>();
+      services.AddScoped<IMEmergencyReportRepo, MEmergencyReportRepo>();
+      services.AddScoped<IMNotificationRepo, MNotificationRepo>();
 
 
 

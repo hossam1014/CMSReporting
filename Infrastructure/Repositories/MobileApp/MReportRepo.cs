@@ -20,7 +20,7 @@ namespace Application.Repositories.MobileApp
     public class MReportRepo : BaseRepo<IssueReport>, IMReportRepo
     {
         private readonly IMapper _mapper;
-        public MReportRepo(DataContext context, IMapper mapper) : base(context)
+        public MReportRepo(DataContext context, IMapper mapper) : base(context, mapper)
         {
             _mapper = mapper;
         }

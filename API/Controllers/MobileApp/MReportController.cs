@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Extensions;
 using Application.Contracts.MobileApp.MReport;
 using Application.Interfaces;
+using Application.Interfaces.MobileApp;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,16 +13,16 @@ namespace API.Controllers.MobileApp
 {
     public class MReportController : BaseApiController
     {
-        private readonly IUnitOfWork _uow;
-        public MReportController(IUnitOfWork uow)
+        private readonly IMReportRepo _reportRepo;
+        public MReportController(IMReportRepo reportRepo)
         {
-            _uow = uow;
+            _reportRepo = reportRepo;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddReport(MAddReport addReport)
         {
-            var result = await _uow.MReportRepo.AddReport(addReport);
+            var result = await _reportRepo.AddReport(addReport);
 
             return result.Match(
                 onSuccess : () => Ok(result),
@@ -32,7 +33,7 @@ namespace API.Controllers.MobileApp
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetReports(string userId)
         {
-            var result = await _uow.MReportRepo.GetReportsByUserId(userId);
+            var result = await _reportRepo.GetReportsByUserId(userId);
 
             return result.Match(
                 onSuccess : () => Ok(result),
