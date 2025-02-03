@@ -96,5 +96,12 @@ namespace Infrastructure.Repositories.Dashboard
 
             return Result.Success(_mapper.Map<ReportResponse>(report));
         }
+
+        public async Task<Result<int>> NumberOfReports()
+        {
+            var count = await _context.IssueReports.CountAsync();
+
+            return Result.Success(count);
+        }
     }
 }

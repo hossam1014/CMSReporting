@@ -46,7 +46,7 @@ using (IServiceScope scope = app.Services.CreateScope())
     var context = service.GetRequiredService<DataContext>();
     var userManager = service.GetRequiredService<UserManager<AppUser>>();
     var roleManager = service.GetRequiredService<RoleManager<AppRole>>();
-    var uow = service.GetRequiredService<IUnitOfWork>();
+    // var uow = service.GetRequiredService<IUnitOfWork>();
     await context.Database.MigrateAsync();
     await Seed.SeedData(context);
     await SeedUsersAndRoles.SeedUsers(userManager, roleManager, context);
