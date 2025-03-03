@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Abstractions;
 using Application.Contracts.MobileApp.MReport;
+using Domain.Entities;
 
 namespace Application.Interfaces.MobileApp
 {
@@ -11,5 +12,8 @@ namespace Application.Interfaces.MobileApp
     {
         Task<Result> AddReport(MAddReport addReport);
         Task<Result<List<MReportResponse>>> GetReportsByUserId(string userId);
+        Task<Result> SubmitEmergencyReport(EmergencyReportRequest request);
+        Task<Result> AddFeedback(FeedBack feedback);
+        Task<List<FeedBack>> GetAllFeedbacks();
     }
 }

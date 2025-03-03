@@ -3,6 +3,8 @@ using API.Extensions;
 using API.Middlewares;
 using Application;
 using Application.Interfaces;
+using Application.Interfaces.MobileApp;
+using Application.Repositories.MobileApp;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
@@ -30,6 +32,7 @@ builder.Services.AddSignalR();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+builder.Services.AddScoped<IMReportRepo, MReportRepo>();
 
 
 var app = builder.Build();

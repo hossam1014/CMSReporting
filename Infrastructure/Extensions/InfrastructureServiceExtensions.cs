@@ -11,6 +11,7 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
 
 
 namespace Infrastructure.Extensions
@@ -28,8 +29,8 @@ namespace Infrastructure.Extensions
 
       services.AddHttpContextAccessor();
 
-      // services.Configure<SendOTP>(config.GetSection("OTPSend"));
-      services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+            // services.Configure<SendOTP>(config.GetSection("OTPSend"));
+            IServiceCollection serviceCollection = services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
       services.AddDbContext<DataContext>(options =>
       {
         options.UseSqlServer(config.GetConnectionString("DefaultConnection"));

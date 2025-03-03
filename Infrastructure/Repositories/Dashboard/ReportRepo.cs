@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Extensions;
 using Application.Abstractions;
 using Application.Contracts.Dashboard.Report;
+using Application.DTOs;
 using Application.Errors.Auth;
 using Application.Errors.Report;
 using Application.Helpers;
@@ -102,6 +103,68 @@ namespace Infrastructure.Repositories.Dashboard
             var count = await _context.IssueReports.CountAsync();
 
             return Result.Success(count);
+        }
+        public async Task<ReportSummaryDto> GetReportSummaryAsync()
+        {
+            var summary = await _context.IssueReports
+                .Where(x => !x.IsDeleted)
+                .GroupBy(r => r.ReportStatus)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            var reportSummary = new ReportSummaryDto
+            {
+                TotalReports = summary.Sum(x => x.Count),
+                Active = summary.FirstOrDefault(x => x.Status == EReportStatus.Active)?.Count ?? 0,
+                InProgress = summary.FirstOrDefault(x => x.Status == EReportStatus.InProgress)?.Count ?? 0,
+                Resolved = summary.FirstOrDefault(x => x.Status == EReportStatus.Resolved)?.Count ?? 0,
+            };
+
+            return reportSummary;
+        }
+        public async Task<List<EmergencyAlertDto>> GetEmergencyAlertsAsync()
+        {
+            return await _context.IssueReports
+                .Include(r => r.IssueCategory)
+                .Where(r => r.IssueCategory.NameEN == "Ambulance" ||
+                            r.IssueCategory.NameEN == "Fire" ||
+                            r.IssueCategory.NameEN == "Police")
+                .GroupBy(r => r.IssueCategory.NameEN)
+                .Select(g => new EmergencyAlertDto
+                {
+                    Category = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+        }
+        public async Task<List<TopCategoryDto>> GetTopReportedCategoriesAsync()
+        {
+            return await _context.IssueReports
+                .Include(r => r.IssueCategory)
+                .Where(r => !r.IsDeleted)
+                .GroupBy(r => r.IssueCategory.NameEN)
+                .OrderByDescending(g => g.Count()) 
+                .Take(5) 
+                .Select(g => new TopCategoryDto
+                {
+                    Category = g.Key,
+                    Count = g.Count()
+                })
+                .ToListAsync();
+        }
+        public async Task<List<FeedBackDto>> GetRecentFeedbackAsync()
+        {
+            return await _context.FeedBacks
+                .OrderByDescending(f => f.Date) 
+                .Take(10) 
+                .Select(f => new FeedBackDto
+                {
+                    Comment = f.Comment,
+                    RateValue = f.RateValue,
+                    Date = f.Date,
+                    MobileUserName = f.MobileUser!= null ? f.MobileUser.FullName : "Unknown" 
+                })
+                .ToListAsync();
         }
     }
 }

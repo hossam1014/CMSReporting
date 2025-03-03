@@ -2,7 +2,7 @@ namespace Domain.Enums
 {
     public enum EReportStatus
     {
-        Reported,
+        Active,
         InProgress,
         Resolved
     }

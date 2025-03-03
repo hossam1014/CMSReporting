@@ -6,6 +6,7 @@ using API.Extensions;
 using Application.Contracts.MobileApp.MReport;
 using Application.Interfaces;
 using Application.Interfaces.MobileApp;
+using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,22 @@ namespace API.Controllers.MobileApp
             );
         }
 
+        [HttpPost("emergency")]
+        public async Task<IActionResult> SubmitEmergencyReport([FromBody] EmergencyReportRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _reportRepo.SubmitEmergencyReport(request);
+
+            return result.Match( 
+                onSuccess: () => Ok(new { message = "Emergency report submitted successfully!" }),
+                onFailure: () => result.HandleFailure(StatusCodes.Status500InternalServerError)
+            );
+        }
+
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetReports(string userId)
         {
@@ -39,6 +56,8 @@ namespace API.Controllers.MobileApp
                 onSuccess : () => Ok(result),
                 onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
-        }
+        }        
+       
+
     }
 }

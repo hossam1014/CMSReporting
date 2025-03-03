@@ -28,5 +28,36 @@ namespace API.Controllers.Dashboard
                 onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
+
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetReportSummary()
+        {
+            var result = await _reportRepo.GetReportSummaryAsync();
+
+            return result != null
+                ? Ok(result)
+                : BadRequest("Failed to retrieve report summary");
+        }
+
+        [HttpGet("emergencies/lastEmergencies")]
+        public async Task<IActionResult> GetEmergencyAlerts()
+        {
+            var result = await _reportRepo.GetEmergencyAlertsAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("reports/top-categories")]
+        public async Task<IActionResult> GetTopReportedCategories()
+        {
+            var result = await _reportRepo.GetTopReportedCategoriesAsync();
+            return Ok(result);
+        }
+        [HttpGet("feedback/recent")]
+        public async Task<IActionResult> GetRecentFeedback()
+        {
+            var result = await _reportRepo.GetRecentFeedbackAsync();
+            return Ok(result);
+        }
+
     }
 }

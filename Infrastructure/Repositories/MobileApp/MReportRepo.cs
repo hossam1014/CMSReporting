@@ -59,5 +59,56 @@ namespace Application.Repositories.MobileApp
 
 
         }
+
+        public async Task<Result> SubmitEmergencyReport(EmergencyReportRequest request)
+        {
+            try
+            {
+                var serviceExists = await _context.EmergencyServices.AsNoTracking()
+                                        .AnyAsync(x => x.Id == request.EmergencyServiceId);
+                if (!serviceExists)
+                    return Result.Failure(MReportErrors.EmergencyServiceNotFound);
+
+                var report = new EmergencyReport
+                {
+                    EmergencyServiceId = request.EmergencyServiceId,
+                    Latitude = request.Latitude,
+                    Longitude = request.Longitude,
+                    Description = request.Description,
+                };
+
+                await _context.EmergencyReports.AddAsync(report);
+                await _context.SaveChangesAsync();
+
+                return Result.Success();
+            }
+            catch (Exception)
+            {
+                return Result.Failure(MReportErrors.ReportSaveFailed);
+            }
+        }
+        public async Task<Result> AddFeedback(FeedBack feedback)
+        {
+            try
+            {
+                await _context.FeedBacks.AddAsync(feedback);
+                await _context.SaveChangesAsync();
+                return Result.Success();
+            }
+            catch (Exception)
+            {
+                return Result.Failure(MReportErrors.FeedbackSaveFailed);
+            }
+        }
+
+        public async Task<List<FeedBack>> GetAllFeedbacks()
+        {
+            return await _context.FeedBacks
+                                .AsNoTracking()
+                                .OrderByDescending(f => f.Date)
+                                .ToListAsync();
+        }
+
     }
+
 }

@@ -1,19 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.DTOs
 {
-    public class FeedBack: BaseEntity
+    public class FeedBackDto
     {
         public string Comment { get; set; }
-
         public int RateValue { get; set; }
-
         public DateTime Date { get; set; }
-       
-        public string MobileUserId { get; set; }
-        public MobileUser MobileUser { get; set; }
+        public string MobileUserName { get; set; }
     }
 }
