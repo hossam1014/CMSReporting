@@ -42,8 +42,8 @@ namespace API.Extensions
                 {
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidIssuer = config["JwtTokenKey:ValidIssuer"],
                     ValidAudience = config["JwtTokenKey:ValidAudience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtTokenKey:Secret"])),
