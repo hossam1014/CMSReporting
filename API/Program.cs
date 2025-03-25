@@ -24,6 +24,8 @@ builder.Services.AddControllers();
 
 
 
+
+
 builder.Services.AddCors();
 builder.Services.AddIdentityServices(builder.Configuration);
 
