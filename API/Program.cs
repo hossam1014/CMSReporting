@@ -93,6 +93,11 @@ app.UseExceptionHandler();
 
 app.MapFallbackToController("Index", "Fallback");
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
 
 
 app.Run();

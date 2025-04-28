@@ -51,7 +51,18 @@ namespace API.Controllers.Dashboard
                 onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
-        
+
+        [HttpGet("socialMedia")]
+        public async Task<IActionResult> GetSocialMediaReports([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string keyword)
+        {
+            var result = await _reportRepo.GetSharedReportsAsync(from, to, keyword);
+
+            return Ok(new
+            {
+                success = true,
+                reports = result
+            });
+        }
 
     }
 }

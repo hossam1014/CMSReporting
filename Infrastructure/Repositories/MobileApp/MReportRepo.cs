@@ -104,6 +104,7 @@ namespace Application.Repositories.MobileApp
         public async Task<List<FeedBack>> GetAllFeedbacks()
         {
             return await _context.FeedBacks
+                                .Include(f => f.MobileUser)
                                 .AsNoTracking()
                                 .OrderByDescending(f => f.Date)
                                 .ToListAsync();

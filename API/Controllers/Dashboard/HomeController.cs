@@ -59,5 +59,19 @@ namespace API.Controllers.Dashboard
             return Ok(result);
         }
 
+        [HttpGet("monthly-report-counts")]
+        public async Task<IActionResult> GetMonthlyReportCounts()
+        {
+            var result = await _reportRepo.GetMonthlyReportCountsAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("critical-reports-dashboard")]
+        public async Task<IActionResult> GetCriticalReportsDashboard()
+        {
+            var result = await _reportRepo.GetCriticalReportsDashboardAsync();
+            return Ok(result);
+        }
+
     }
 }

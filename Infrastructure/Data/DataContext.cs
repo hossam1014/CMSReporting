@@ -32,9 +32,10 @@ namespace Infrastructure.Data
         public DbSet<FeedBack> FeedBacks { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }
         public DbSet<IssueReport> IssueReports { get; set; }
-        public DbSet<IssueReportStatusHistory> ReportStatusHistories { get; set; }
-        public DbSet<SocialMediaReport> SocialMediaReports { get; set; }
 
+        public DbSet<IssueReportStatusHistory> ReportStatusHistories { get; set; }
+
+        public DbSet<SocialMediaReport> SocialMediaReports { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -56,8 +57,11 @@ namespace Infrastructure.Data
                 .HasForeignKey(ur => ur.RoleId)
             .IsRequired();
 
-            
-
+            builder.Entity<FeedBack>()
+                  .HasOne(f => f.MobileUser)
+                  .WithMany(u => u.FeedBacks)
+                  .HasForeignKey(f => f.MobileUserId)
+                  .IsRequired(false); 
 
         }
     }
