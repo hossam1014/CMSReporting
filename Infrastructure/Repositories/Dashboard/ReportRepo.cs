@@ -173,11 +173,12 @@ namespace Infrastructure.Repositories.Dashboard
         }
 
 
-        public async Task<List<SocialMediaReportDto>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword)
+        public async Task<Result<List<SocialMediaReportDto>>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword)
         {
             var query = _context.IssueReports
                 .Include(r => r.IssueCategory)
-                .Where(r => !r.IsDeleted && r.IsSharedOnSocialMedia);
+                .Where(r => !r.IsDeleted && r.IsSharedOnSocialMedia)
+                .AsQueryable();
 
             if (from.HasValue)
                 query = query.Where(r => r.DateIssued >= from.Value);
@@ -185,22 +186,18 @@ namespace Infrastructure.Repositories.Dashboard
             if (to.HasValue)
                 query = query.Where(r => r.DateIssued <= to.Value);
 
-            if (!string.IsNullOrEmpty(keyword))
+            if (!string.IsNullOrWhiteSpace(keyword))
                 query = query.Where(r => r.Description.Contains(keyword));
 
-            return await query.Select(r => new SocialMediaReportDto
-            {
-                ReportId = r.Id.ToString(),
-                Description = r.Description,
-                PhotoUrl = r.ImageUrl,
-                IssueCategory = r.IssueCategory.NameEN,
-                PostedAt = r.DateIssued,
-                Likes = r.Likes,
-                Shares = r.Shares
-            }).ToListAsync();
+            var result = await query
+                .OrderByDescending(r => r.DateIssued)
+                .ProjectTo<SocialMediaReportDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return Result.Success(result);
         }
 
-public async Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync()
+        public async Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync()
     {
         var result = await _context.IssueReports
             .Where(r => !r.IsDeleted)
@@ -301,7 +298,7 @@ public async Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync()
             };
         }
 
-
+       
     }
 
 }
