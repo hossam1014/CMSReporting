@@ -8,7 +8,6 @@ namespace Application.DTOs
 {
     public class MonthlyReportCountDto
     {
-        public int Year { get; set; }
         public string MonthName { get; set; }
         public int ReportCount { get; set; }
     }

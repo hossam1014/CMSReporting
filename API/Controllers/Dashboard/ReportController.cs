@@ -7,6 +7,7 @@ using Application.Contracts.Dashboard.Report;
 using Application.Helpers.FilterParams;
 using Application.Interfaces;
 using Application.Interfaces.Dashboard;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Dashboard
@@ -53,16 +54,21 @@ namespace API.Controllers.Dashboard
         }
 
         [HttpGet("socialMedia")]
+        [Authorize]
         public async Task<IActionResult> GetSocialMediaReports([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string keyword)
         {
             var result = await _reportRepo.GetSharedReportsAsync(from, to, keyword);
 
-            return Ok(new
-            {
-                success = true,
-                reports = result
-            });
+            return result.Match(
+                onSuccess: () => Ok(new
+                {
+                    success = true,
+                    reports = result.Value
+                }),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
+            );
         }
+
 
     }
 }

@@ -22,7 +22,7 @@ namespace Application.Interfaces.Dashboard
         Task<List<EmergencyAlertDto>> GetEmergencyAlertsAsync();
         Task<List<TopCategoryDto>> GetTopReportedCategoriesAsync();
         Task<List<FeedBackDto>> GetRecentFeedbackAsync();
-        Task<List<SocialMediaReportDto>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword);
+        Task<Result<List<SocialMediaReportDto>>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword);
         Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync();
         Task<CriticalReportsDto> GetCriticalReportsDashboardAsync();
 

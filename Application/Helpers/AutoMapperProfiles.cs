@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using Application.Contracts.Dashboard.Report;
 using Application.Contracts.MobileApp.MReport;
+using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
 
@@ -27,6 +28,11 @@ namespace Application.Helpers
                 .ForMember(dest => dest.ReportStatus, opt => opt.MapFrom(src => src.ReportStatus.ToString()));
 
 
+            CreateMap<IssueReport, SocialMediaReportDto>()
+                .ForMember(dest => dest.ReportId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.ImageUrl))
+                .ForMember(dest => dest.IssueCategory, opt => opt.MapFrom(src => src.IssueCategory.NameAR)) 
+                .ForMember(dest => dest.PostedAt, opt => opt.MapFrom(src => src.DateIssued));
 
 
 
