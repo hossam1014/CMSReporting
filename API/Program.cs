@@ -91,7 +91,7 @@ app.MapControllers();
 
 app.UseExceptionHandler();
 
-app.MapFallbackToController("Index", "Fallback");
+// app.MapFallbackToController("Index", "Fallback");
 
 
 
