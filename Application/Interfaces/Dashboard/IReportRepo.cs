@@ -7,6 +7,7 @@ using Application.Contracts.Dashboard.Report;
 using Application.DTOs;
 using Application.Helpers;
 using Application.Helpers.FilterParams;
+using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Interfaces.Dashboard
@@ -21,6 +22,10 @@ namespace Application.Interfaces.Dashboard
         Task<List<EmergencyAlertDto>> GetEmergencyAlertsAsync();
         Task<List<TopCategoryDto>> GetTopReportedCategoriesAsync();
         Task<List<FeedBackDto>> GetRecentFeedbackAsync();
+        Task<Result<List<SocialMediaReportDto>>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword);
+        Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync();
+        Task<CriticalReportsDto> GetCriticalReportsDashboardAsync();
+
 
     }
 }

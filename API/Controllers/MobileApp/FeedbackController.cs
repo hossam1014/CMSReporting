@@ -4,6 +4,7 @@ using Application.Interfaces.MobileApp;
 using Domain.Entities;
 using Application.Contracts.MobileApp.MReport;
 using API.Extensions;
+using Application.DTOs;
 
 namespace API.Controllers
 {
@@ -44,7 +45,20 @@ namespace API.Controllers
         public async Task<IActionResult> GetAllFeedbacks()
         {
             var feedbacks = await _mReportRepo.GetAllFeedbacks();
-            return Ok(feedbacks);
+
+            var feedbackDtos = feedbacks.Select(f => new FeedBackDto
+            {
+                Id = f.Id,
+                Comment = f.Comment,
+                RateValue = f.RateValue,
+                Date = f.Date,
+                MobileUserId = f.MobileUserId,
+                MobileUserName = f.MobileUser?.FullName,    
+                MobileUserPhone = f.MobileUser?.PhoneNumber
+            }).ToList();
+
+            return Ok(feedbackDtos);
         }
+
     }
 }
