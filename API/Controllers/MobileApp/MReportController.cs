@@ -21,7 +21,7 @@ namespace API.Controllers.MobileApp
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddReport(MAddReport addReport)
+        public async Task<IActionResult> AddReport([FromForm] MAddReport addReport)
         {
             var result = await _reportRepo.AddReport(addReport);
 
@@ -46,6 +46,8 @@ namespace API.Controllers.MobileApp
                 onFailure: () => result.HandleFailure(StatusCodes.Status500InternalServerError)
             );
         }
+
+
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetReports(string userId)

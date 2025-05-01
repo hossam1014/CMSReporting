@@ -10,7 +10,7 @@ namespace Application.Contracts.MobileApp.MReport
     {
         public MAddReportValidator()
         {
-            RuleFor(p => p.MobileUserId).NotEmpty();
+            // RuleFor(p => p.MobileUserId).NotEmpty();
             RuleFor(p => p.Description).NotEmpty();
             RuleFor(p => p.IssueCategoryKey).NotEmpty();
             // RuleFor(p => p.Image) // to make it in just (.jpg , .png , ...);

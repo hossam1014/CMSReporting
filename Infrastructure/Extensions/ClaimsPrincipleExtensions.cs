@@ -22,5 +22,11 @@ namespace API.Extensions
             }
             return null;
         }
+
+        public static string GetEmail(this ClaimsPrincipal user)
+        {
+            return user?.FindFirst(ClaimTypes.Email)?.Value
+                ?? user?.FindFirst("email")?.Value;
+        }
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Infrastructure.Repositories;
 
 
 namespace Infrastructure.Extensions
@@ -44,6 +45,7 @@ namespace Infrastructure.Extensions
       services.AddScoped<IReportRepo, ReportRepo>();
       services.AddScoped<IMEmergencyReportRepo, MEmergencyReportRepo>();
       services.AddScoped<IMNotificationRepo, MNotificationRepo>();
+      services.AddScoped<IFileRepo, FileRepo>();
 
 
 
