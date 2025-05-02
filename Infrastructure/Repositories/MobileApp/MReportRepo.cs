@@ -72,8 +72,13 @@ namespace Application.Repositories.MobileApp
             return Result.Success();
         }
 
-        public async Task<Result<List<MReportResponse>>> GetReportsByUserId(string userId)
+        public async Task<Result<List<MReportResponse>>> GetReportsByUserId()
         {
+
+            var userId = _httpContextAccessor.HttpContext?.User.GetUserId();
+            if (userId == null)
+                return Result.Failure<List<MReportResponse>>(AuthErrors.UserNotFound);
+
             var reports = await _context.IssueReports.AsNoTracking()
                                                     .Where(x => x.MobileUserId == userId)
                                                     .ProjectTo<MReportResponse>(_mapper.ConfigurationProvider)

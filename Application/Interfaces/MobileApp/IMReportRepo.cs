@@ -11,7 +11,7 @@ namespace Application.Interfaces.MobileApp
     public interface IMReportRepo
     {
         Task<Result> AddReport(MAddReport addReport);
-        Task<Result<List<MReportResponse>>> GetReportsByUserId(string userId);
+        Task<Result<List<MReportResponse>>> GetReportsByUserId();
         Task<Result> SubmitEmergencyReport(EmergencyReportRequest request);
         Task<Result> AddFeedback(FeedBack feedback);
         Task<List<FeedBack>> GetAllFeedbacks();
