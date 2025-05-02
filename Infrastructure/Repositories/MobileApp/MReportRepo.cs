@@ -91,39 +91,39 @@ namespace Application.Repositories.MobileApp
 
         public async Task<Result> SubmitEmergencyReport(EmergencyReportRequest request)
         {
-            try
+
+            var userId = _httpContextAccessor.HttpContext?.User.GetUserId();
+            if (userId == null)
+                return Result.Failure<MReportResponse>(AuthErrors.UserNotFound);
+
+            // Get or create the mobile user
+            var mobileUserResult = await GetOrCreateMobileUserAsync(userId);
+            if (mobileUserResult.IsFailure)
+                return Result.Failure(mobileUserResult.Error);
+
+            var serviceExists = await _context.EmergencyServices.AsNoTracking()
+                                    .AnyAsync(x => x.Id == request.EmergencyServiceId);
+            if (!serviceExists)
+                return Result.Failure(MReportErrors.EmergencyServiceNotFound);
+
+            var report = new EmergencyReport
             {
-                var userId = _httpContextAccessor.HttpContext?.User.GetUserId();
-                if (userId == null)
-                    return Result.Failure<MReportResponse>(AuthErrors.UserNotFound);
+                EmergencyServiceId = request.EmergencyServiceId,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
+                MobileUserId = userId,
+                DateIssued = DateTime.UtcNow,
+                ReportStatus = EReportStatus.Active,
+                Address = request.Address,
+                IssueCategoryId = await _context.IssueCategories.AsNoTracking().Where(x => x.Key == "emergency").Select(x => x.Id).FirstOrDefaultAsync(),
 
-                var serviceExists = await _context.EmergencyServices.AsNoTracking()
-                                        .AnyAsync(x => x.Id == request.EmergencyServiceId);
-                if (!serviceExists)
-                    return Result.Failure(MReportErrors.EmergencyServiceNotFound);
+            };
 
-                var report = new EmergencyReport
-                {
-                    EmergencyServiceId = request.EmergencyServiceId,
-                    Latitude = request.Latitude,
-                    Longitude = request.Longitude,
-                    MobileUserId = userId,
-                    DateIssued = DateTime.UtcNow,
-                    ReportStatus = EReportStatus.Active,
-                    Address = request.Address,
-                    IssueCategoryId = await _context.IssueCategories.AsNoTracking().Where(x => x.Key == "emergency").Select(x=> x.Id).FirstOrDefaultAsync(), 
+            await _context.EmergencyReports.AddAsync(report);
+            await _context.SaveChangesAsync();
 
-                };
+            return Result.Success();
 
-                await _context.EmergencyReports.AddAsync(report);
-                await _context.SaveChangesAsync();
-
-                return Result.Success();
-            }
-            catch (Exception)
-            {
-                return Result.Failure(MReportErrors.ReportSaveFailed);
-            }
         }
         public async Task<Result> AddFeedback(FeedBack feedback)
         {
