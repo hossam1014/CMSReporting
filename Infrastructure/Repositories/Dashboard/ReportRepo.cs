@@ -143,12 +143,14 @@ namespace Infrastructure.Repositories.Dashboard
             return await _context.IssueReports
                 .Include(r => r.IssueCategory)
                 .Where(r => !r.IsDeleted)
-                .GroupBy(r => r.IssueCategory.NameEN)
+                .GroupBy(r => r.IssueCategory.Key)
                 .OrderByDescending(g => g.Count())
                 .Take(5)
                 .Select(g => new TopCategoryDto
                 {
-                    Category = g.Key,
+                    // Category = g.Key,
+                    CategoryAR = g.FirstOrDefault().IssueCategory.NameAR,
+                    CategoryEN = g.FirstOrDefault().IssueCategory.NameEN,
                     Count = g.Count()
                 })
                 .ToListAsync();
