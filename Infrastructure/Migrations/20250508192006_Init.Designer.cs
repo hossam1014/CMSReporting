@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241213214006_NameInEmergency")]
-    partial class NameInEmergency
+    [Migration("20250508192006_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.11")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -303,6 +303,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ReportStatus")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReportType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IssueCategoryId");
@@ -439,34 +442,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("NotificationUsers");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("IssueReportId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IssueReportId");
-
-                    b.ToTable("SocialMediaReports");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -568,6 +543,26 @@ namespace Infrastructure.Migrations
                     b.HasIndex("EmergencyServiceId");
 
                     b.ToTable("EmergencyReports");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
+                {
+                    b.HasBaseType("Domain.Entities.IssueReport");
+
+                    b.Property<string>("Content")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Shares")
+                        .HasColumnType("int");
+
+                    b.ToTable("SocialMediaReports");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppUserRole", b =>
@@ -681,17 +676,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Notification");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
-                {
-                    b.HasOne("Domain.Entities.IssueReport", "IssueReport")
-                        .WithMany()
-                        .HasForeignKey("IssueReportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IssueReport");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Domain.Entities.AppRole", null)
@@ -743,6 +727,15 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("EmergencyService");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
+                {
+                    b.HasOne("Domain.Entities.IssueReport", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.SocialMediaReport", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.AppRole", b =>

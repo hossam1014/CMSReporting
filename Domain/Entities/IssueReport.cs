@@ -21,12 +21,8 @@ namespace Domain.Entities
         public EReportStatus ReportStatus { get; set; }
 
         public DateTime DateIssued { get; set; }
-        public bool IsSharedOnSocialMedia { get; set; } = false;
 
-        public int Likes { get; set; } = 0;
-
-        public int Shares { get; set; } = 0;
-
+        public EReportType ReportType { get; set; } = EReportType.None;
 
         // Location
         public double Latitude { get; set; }

@@ -182,7 +182,7 @@ namespace Infrastructure.Repositories.Dashboard
         {
             var query = _context.IssueReports
                 .Include(r => r.IssueCategory)
-                .Where(r => !r.IsDeleted && r.IsSharedOnSocialMedia)
+                .Where(r => !r.IsDeleted && r.ReportType == EReportType.SocialMedia)
                 .AsQueryable();
 
             if (from.HasValue)

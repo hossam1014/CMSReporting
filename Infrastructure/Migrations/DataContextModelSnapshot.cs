@@ -192,7 +192,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmergencyServices", (string)null);
+                    b.ToTable("EmergencyServices");
                 });
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
@@ -223,7 +223,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MobileUserId");
 
-                    b.ToTable("FeedBacks", (string)null);
+                    b.ToTable("FeedBacks");
                 });
 
             modelBuilder.Entity("Domain.Entities.IssueCategory", b =>
@@ -256,7 +256,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("IssueCategories", (string)null);
+                    b.ToTable("IssueCategories");
                 });
 
             modelBuilder.Entity("Domain.Entities.IssueReport", b =>
@@ -285,17 +285,11 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSharedOnSocialMedia")
-                        .HasColumnType("bit");
-
                     b.Property<int>("IssueCategoryId")
                         .HasColumnType("int");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("float");
-
-                    b.Property<int>("Likes")
-                        .HasColumnType("int");
 
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
@@ -306,7 +300,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("ReportStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("Shares")
+                    b.Property<int>("ReportType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -315,7 +309,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MobileUserId");
 
-                    b.ToTable("IssueReports", (string)null);
+                    b.ToTable("IssueReports");
 
                     b.UseTptMappingStrategy();
                 });
@@ -349,7 +343,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportStatusHistories", (string)null);
+                    b.ToTable("ReportStatusHistories");
                 });
 
             modelBuilder.Entity("Domain.Entities.MobileUser", b =>
@@ -377,7 +371,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MobileUsers", (string)null);
+                    b.ToTable("MobileUsers");
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -427,7 +421,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserRecievedId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Domain.Entities.NotificationUser", b =>
@@ -442,35 +436,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MobileUserId");
 
-                    b.ToTable("NotificationUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("IssueReportId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IssueReportId");
-
-                    b.ToTable("SocialMediaReports", (string)null);
+                    b.ToTable("NotificationUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -573,7 +539,27 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("EmergencyServiceId");
 
-                    b.ToTable("EmergencyReports", (string)null);
+                    b.ToTable("EmergencyReports");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
+                {
+                    b.HasBaseType("Domain.Entities.IssueReport");
+
+                    b.Property<string>("Content")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Shares")
+                        .HasColumnType("int");
+
+                    b.ToTable("SocialMediaReports");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppUserRole", b =>
@@ -687,17 +673,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Notification");
                 });
 
-            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
-                {
-                    b.HasOne("Domain.Entities.IssueReport", "IssueReport")
-                        .WithMany()
-                        .HasForeignKey("IssueReportId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IssueReport");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Domain.Entities.AppRole", null)
@@ -749,6 +724,15 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("EmergencyService");
+                });
+
+            modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
+                {
+                    b.HasOne("Domain.Entities.IssueReport", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.SocialMediaReport", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.AppRole", b =>

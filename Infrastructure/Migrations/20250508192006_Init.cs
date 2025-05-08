@@ -64,7 +64,8 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NameAR = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    NameEN = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ContactNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Latitude = table.Column<double>(type: "float", nullable: false),
                     Longitude = table.Column<double>(type: "float", nullable: false),
@@ -249,10 +250,12 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     IssueCategoryId = table.Column<int>(type: "int", nullable: false),
                     MobileUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ReportStatus = table.Column<int>(type: "int", nullable: false),
                     DateIssued = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReportType = table.Column<int>(type: "int", nullable: false),
                     Latitude = table.Column<double>(type: "float", nullable: false),
                     Longitude = table.Column<double>(type: "float", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -366,19 +369,18 @@ namespace Infrastructure.Migrations
                 name: "SocialMediaReports",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IssueReportId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    Shares = table.Column<int>(type: "int", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SocialMediaReports", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SocialMediaReports_IssueReports_IssueReportId",
-                        column: x => x.IssueReportId,
+                        name: "FK_SocialMediaReports_IssueReports_Id",
+                        column: x => x.Id,
                         principalTable: "IssueReports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -501,11 +503,6 @@ namespace Infrastructure.Migrations
                 name: "IX_ReportStatusHistories_UserId",
                 table: "ReportStatusHistories",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SocialMediaReports_IssueReportId",
-                table: "SocialMediaReports",
-                column: "IssueReportId");
         }
 
         /// <inheritdoc />
