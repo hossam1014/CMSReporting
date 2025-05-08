@@ -192,7 +192,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmergencyServices");
+                    b.ToTable("EmergencyServices", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
@@ -223,7 +223,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MobileUserId");
 
-                    b.ToTable("FeedBacks");
+                    b.ToTable("FeedBacks", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.IssueCategory", b =>
@@ -256,7 +256,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("IssueCategories");
+                    b.ToTable("IssueCategories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.IssueReport", b =>
@@ -315,7 +315,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MobileUserId");
 
-                    b.ToTable("IssueReports");
+                    b.ToTable("IssueReports", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -349,7 +349,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReportStatusHistories");
+                    b.ToTable("ReportStatusHistories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.MobileUser", b =>
@@ -377,7 +377,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MobileUsers");
+                    b.ToTable("MobileUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
@@ -427,7 +427,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserRecievedId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.NotificationUser", b =>
@@ -442,7 +442,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("MobileUserId");
 
-                    b.ToTable("NotificationUsers");
+                    b.ToTable("NotificationUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.SocialMediaReport", b =>
@@ -470,7 +470,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("IssueReportId");
 
-                    b.ToTable("SocialMediaReports");
+                    b.ToTable("SocialMediaReports", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -573,7 +573,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("EmergencyServiceId");
 
-                    b.ToTable("EmergencyReports");
+                    b.ToTable("EmergencyReports", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.AppUserRole", b =>

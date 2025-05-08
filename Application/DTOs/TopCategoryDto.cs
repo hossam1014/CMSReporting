@@ -8,8 +8,11 @@ namespace Application.DTOs
 {
     public class TopCategoryDto
     {
-        public string Category { get; set; }
+        // public string Category { get; set; }
         public int Count { get; set; }
+
+        public string CategoryAR { get; set; }
+        public string CategoryEN { get; set; }
 
 
     }

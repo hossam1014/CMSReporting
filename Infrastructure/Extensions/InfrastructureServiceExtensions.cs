@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Infrastructure.Repositories;
+using Application.Repositories.MobileApp;
 
 
 namespace Infrastructure.Extensions
@@ -26,8 +28,9 @@ namespace Infrastructure.Extensions
       // services.AddScoped<IUnitOfWork, UnitOfWork>();
       services.AddScoped<ITokenService, TokenService>();
       services.AddScoped<IAuthRepo, AuthRepo>();
+      services.AddScoped<IUserService, UserService>();
 
-      services.Configure<JwtConfigurations>(config.GetSection("JwtTokenKey"));
+            services.Configure<JwtConfigurations>(config.GetSection("JwtTokenKey"));
 
       services.AddHttpContextAccessor();
 
@@ -44,23 +47,25 @@ namespace Infrastructure.Extensions
       services.AddScoped<IReportRepo, ReportRepo>();
       services.AddScoped<IMEmergencyReportRepo, MEmergencyReportRepo>();
       services.AddScoped<IMNotificationRepo, MNotificationRepo>();
+      services.AddScoped<IFileRepo, FileRepo>();
+      services.AddScoped<IMReportRepo, MReportRepo>();
+      services.AddScoped<IRoleService, RoleService>();
+
+
+            // // Serilog
+            // Log.Logger = new LoggerConfiguration()
+            //           .ReadFrom.Configuration(config)
+            //           .CreateLogger();
+
+            // services.AddLogging(loggingBuilder =>
+            // {
+            //   loggingBuilder.ClearProviders();
+            //   loggingBuilder.AddSerilog();
+            // });
 
 
 
-      // // Serilog
-      // Log.Logger = new LoggerConfiguration()
-      //           .ReadFrom.Configuration(config)
-      //           .CreateLogger();
-
-      // services.AddLogging(loggingBuilder =>
-      // {
-      //   loggingBuilder.ClearProviders();
-      //   loggingBuilder.AddSerilog();
-      // });
-
-
-
-      return services;
+            return services;
     }
   }
 }

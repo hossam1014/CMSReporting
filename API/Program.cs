@@ -3,11 +3,13 @@ using API.Extensions;
 using API.Middlewares;
 using Application;
 using Application.Interfaces;
+using Application.Interfaces.Dashboard;
 using Application.Interfaces.MobileApp;
 using Application.Repositories.MobileApp;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +36,10 @@ builder.Services.AddSignalR();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddScoped<IMReportRepo, MReportRepo>();
+
+
+
+
 
 
 var app = builder.Build();
@@ -71,6 +76,13 @@ using (IServiceScope scope = app.Services.CreateScope())
     app.UseSwaggerUI();
 // }
 
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"\n[Endpoint]: {context.Request.Method} {context.Request.Path}");
+    await next();
+    Console.WriteLine($"[Status Code]: {context.Response.StatusCode}\n");
+});
+
 app.UseRouting();
 
 
@@ -91,7 +103,7 @@ app.MapControllers();
 
 app.UseExceptionHandler();
 
-app.MapFallbackToController("Index", "Fallback");
+// app.MapFallbackToController("Index", "Fallback");
 
 if (app.Environment.IsDevelopment())
 {

@@ -3,6 +3,15 @@
     "Name": "Admin",
     "NameEN": "Admin",
     "NameAR": "ادمن"
+  },
+  {
+    "Name": "Manager",
+    "NameEN": "Manager",
+    "NameAR": "مدير"
+  },
+  {
+    "Name": "Viewer",
+    "NameEN": "Viewer",
+    "NameAR": "مشاهد"
   }
-  
 ]

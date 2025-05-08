@@ -21,7 +21,7 @@ namespace API.Controllers.MobileApp
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddReport(MAddReport addReport)
+        public async Task<IActionResult> AddReport([FromForm] MAddReport addReport)
         {
             var result = await _reportRepo.AddReport(addReport);
 
@@ -47,16 +47,18 @@ namespace API.Controllers.MobileApp
             );
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetReports(string userId)
+
+
+        [HttpGet("my-reports")]
+        public async Task<IActionResult> GetReports()
         {
-            var result = await _reportRepo.GetReportsByUserId(userId);
+            var result = await _reportRepo.GetReportsByUserId();
 
             return result.Match(
                 onSuccess : () => Ok(result),
                 onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
-        }        
+        }
        
 
     }

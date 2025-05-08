@@ -6,5 +6,22 @@
     "Latitude": 72563.23,
     "Longitude": 6235.23,
     "Address": "test"
+  },
+  {
+    "NameAR": "المطافي",
+    "NameEN": "Fire Department",
+    "ContactNumber": "123",
+    "Latitude": 72563.23,
+    "Longitude": 6235.23,
+    "Address": "test"
+  },
+  {
+    "NameAR": "الشرطة",
+    "NameEN": "Police",
+    "ContactNumber": "124",
+    "Latitude": 72563.23,
+    "Longitude": 6235.23,
+    "Address": "test"
   }
+
 ]

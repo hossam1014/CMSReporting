@@ -15,5 +15,6 @@ namespace Application.Contracts.MobileApp.MReport
         public double Latitude { get; init; }
         public double Longitude { get; init; }
         public string Address { get; init; }
+        public string ImageUrl { get; init; }
     }
 }

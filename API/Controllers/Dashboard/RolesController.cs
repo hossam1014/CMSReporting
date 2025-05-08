@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Interfaces.Dashboard;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,27 +10,20 @@ namespace API.Controllers.Dashboard
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RolesController : ControllerBase
+    public class RolesController : BaseApiController
     {
-        private readonly RoleManager<AppRole> _roleManager;
+        private readonly IRoleService _roleService;
 
-        public RolesController(RoleManager<AppRole> roleManager)
+        public RolesController(IRoleService roleService)
         {
-            _roleManager = roleManager;
+            _roleService = roleService;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetRoles()
         {
-            var roles = await _roleManager.Roles
-                .Select(r => new {
-                    name = r.Name,
-                    nameAR = r.NameAR,
-                    nameEN = r.NameEN
-                })
-                .ToListAsync();
-
+            var roles = await _roleService.GetAllRolesAsync();
             return Ok(new { roles });
         }
     }
