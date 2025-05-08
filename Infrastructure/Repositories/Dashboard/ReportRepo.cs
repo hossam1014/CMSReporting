@@ -37,7 +37,10 @@ namespace Infrastructure.Repositories.Dashboard
         public async Task<Result<PagedList<ReportResponse>>> GetAllReports(BaseParams reportParams)
         {
             var reportsQuery = _context.IssueReports.AsNoTracking()
-                                                .Where(x => !x.IsDeleted)
+                                                .Where(x => !x.IsDeleted &&
+                                                            (string.IsNullOrEmpty(reportParams.Keyword) || x.Description.Contains(reportParams.Keyword)) &&
+                                                            (reportParams.From == null || x.DateIssued >= reportParams.From) &&
+                                                            (reportParams.To == null || x.DateIssued <= reportParams.To))
                                                 .OrderByDescending(x => x.DateIssued)
                                                 .ProjectTo<ReportResponse>(_mapper.ConfigurationProvider);
 
