@@ -1,27 +1,27 @@
 [
   {
-    "name": "Admin",
-    "nameEN": "Admin",
-    "nameAR": "ادمن"
+    "Name": "Admin",
+    "NameEN": "Admin",
+    "NameAR": "ادمن"
   },
   {
-    "name": "Dashboard",
-    "nameEN": "Dashboard Viewer",
-    "nameAR": "عارض لوحة التحكم"
+    "Name": "Dashboard",
+    "NameEN": "Dashboard Viewer",
+    "NameAR": "عارض لوحة التحكم"
   },
   {
-    "name": "Emergency",
-    "nameEN": "Emergency Handler",
-    "nameAR": "مسؤول الطوارئ"
+    "Name": "Emergency",
+    "NameEN": "Emergency Handler",
+    "NameAR": "مسؤول الطوارئ"
   },
   {
-    "name": "Manager",
-    "nameEN": "Manager",
-    "nameAR": "مدير"
+    "Name": "Manager",
+    "NameEN": "Manager",
+    "NameAR": "مدير"
   },
   {
-    "name": "User",
-    "nameEN": "Regular User",
-    "nameAR": "مستخدم عادي"
+    "Name": "User",
+    "NameEN": "Regular User",
+    "NameAR": "مستخدم عادي"
   }
 ]
