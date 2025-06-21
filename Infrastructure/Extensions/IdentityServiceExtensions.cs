@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.Extensions.Options;
 
 namespace API.Extensions
 {
@@ -55,7 +56,8 @@ namespace API.Extensions
             services.AddAuthorization(opt =>
             {
                 opt.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
-
+                opt.AddPolicy("DashboardPolicy", policy => policy.RequireRole("Dashboard", "Admin"));
+                opt.AddPolicy("EmergencyPolicy", policy => policy.RequireRole("Emergency", "Admin"));
             });
 
             return services;

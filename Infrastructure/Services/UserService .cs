@@ -62,8 +62,9 @@ public class UserService : IUserService
         if (user == null) return false;
 
         user.FullName = dto.FullName;
-        user.Email = dto.Email;
-        user.UserName = dto.Email;
+        //user.Email = dto.Email;  
+        //user.UserName = dto.Email;  
+
 
         var currentRoles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, currentRoles);

@@ -178,29 +178,38 @@ namespace Infrastructure.Repositories.Dashboard
         }
 
 
-        public async Task<Result<List<SocialMediaReportDto>>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword)
+        public async Task<List<SocialMediaReportDto>> GetSocialMediaReports(DateTime? from, DateTime? to, string keyword, string language = "ar")
         {
             var query = _context.IssueReports
+                .OfType<SocialMediaReport>() 
                 .Include(r => r.IssueCategory)
-                .Where(r => !r.IsDeleted && r.ReportType == EReportType.SocialMedia)
                 .AsQueryable();
 
             if (from.HasValue)
-                query = query.Where(r => r.DateIssued >= from.Value);
+                query = query.Where(r => r.CreatedAt >= from.Value);
 
             if (to.HasValue)
-                query = query.Where(r => r.DateIssued <= to.Value);
+                query = query.Where(r => r.CreatedAt <= to.Value);
 
             if (!string.IsNullOrWhiteSpace(keyword))
-                query = query.Where(r => r.Description.Contains(keyword));
+                query = query.Where(r => r.Description.Contains(keyword) || r.Content.Contains(keyword));
 
-            var result = await query
-                .OrderByDescending(r => r.DateIssued)
-                .ProjectTo<SocialMediaReportDto>(_mapper.ConfigurationProvider)
+            return await query
+                .Select(r => new SocialMediaReportDto
+                {
+                    ReportId = r.Id.ToString(),
+                    Description = r.Description,
+                    PhotoUrl = r.ImageUrl,
+                    IssueCategory = r.IssueCategory != null
+                ? (language == "en" ? r.IssueCategory.NameEN : r.IssueCategory.NameAR) : null,
+
+                    PostedAt = r.CreatedAt,
+                    Likes = r.Likes,
+                    Shares = r.Shares
+                })
                 .ToListAsync();
-
-            return Result.Success(result);
         }
+
 
         public async Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync()
     {

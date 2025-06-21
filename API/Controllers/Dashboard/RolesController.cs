@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers.Dashboard
 {
+
+    [Authorize(Policy = "AdminPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class RolesController : BaseApiController
@@ -20,7 +22,6 @@ namespace API.Controllers.Dashboard
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetRoles()
         {
             var roles = await _roleService.GetAllRolesAsync();

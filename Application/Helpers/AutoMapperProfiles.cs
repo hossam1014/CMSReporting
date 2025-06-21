@@ -35,6 +35,8 @@ namespace Application.Helpers
                 .ForMember(dest => dest.PostedAt, opt => opt.MapFrom(src => src.DateIssued));
 
 
+          //  CreateMap<RoleDto, AppRole>()
+            //    .ForMember(dest => dest.NormalizedName, opt => opt.MapFrom(src => src.Name.ToUpper()));
 
 
 

@@ -53,20 +53,16 @@ namespace API.Controllers.Dashboard
             );
         }
 
-        [HttpGet("socialMedia")]
+        [HttpGet(template: "social-media-reports")]
         [Authorize]
-        public async Task<IActionResult> GetSocialMediaReports([FromQuery] DateTime? from, [FromQuery] DateTime? to, [FromQuery] string keyword)
+        public async Task<IActionResult> GetSocialReports(
+                DateTime? from,
+                DateTime? to,
+                string keyword,
+                string language = "ar")
         {
-            var result = await _reportRepo.GetSharedReportsAsync(from, to, keyword);
-
-            return result.Match(
-                onSuccess: () => Ok(new
-                {
-                    success = true,
-                    reports = result.Value
-                }),
-                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
-            );
+            var reports = await _reportRepo.GetSocialMediaReports(from, to, keyword, language);
+            return Ok(reports);
         }
 
 

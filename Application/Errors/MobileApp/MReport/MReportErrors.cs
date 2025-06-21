@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +12,7 @@ namespace Application.Errors.MobileApp.MReport
         public static readonly Error ReportSaveFailed = new("ReportSaveFailed", "An error occurred while saving the report.");
         public static readonly Error EmergencyServiceNotFound = new ("Emergency service.NotFound", "Can't Find This Emergency service");
         public static readonly Error FeedbackSaveFailed = new("FeedbackSaveFailed", "An error occurred while saving the feedback.");
+        public static readonly Error MobileUserNotFound = new("MobileUser.NotFound", "المستخدم غير موجود");
 
     }
 }

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Dashboard
 {
-    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/users")]
     public class UsersController : BaseApiController
@@ -23,6 +22,8 @@ namespace API.Controllers.Dashboard
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdminPolicy")]
+
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userService.GetUsersWithRolesAsync();
@@ -30,6 +31,8 @@ namespace API.Controllers.Dashboard
         }
 
         [HttpPost]
+        [Authorize(Policy = "AdminPolicy")]
+
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)
         {
             var result = await _userService.CreateUserAsync(dto);
@@ -38,6 +41,8 @@ namespace API.Controllers.Dashboard
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "AdminPolicy")]
+
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto dto)
         {
             var result = await _userService.UpdateUserAsync(id, dto);

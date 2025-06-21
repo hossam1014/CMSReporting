@@ -122,6 +122,7 @@ namespace Application.Repositories.MobileApp
             await _context.EmergencyReports.AddAsync(report);
             await _context.SaveChangesAsync();
 
+
             return Result.Success();
 
         }
@@ -171,6 +172,21 @@ namespace Application.Repositories.MobileApp
 
             return Result.Success();
         }
+        public async Task<Result<bool>> UpdateLocationAsync(string userId, UpdateLocationRequest request)
+        {
+            var user = await _context.MobileUsers.FindAsync(userId);
+            if (user == null)
+                return Result.Failure<bool>(MReportErrors.MobileUserNotFound);
+
+            user.Latitude = request.Latitude;
+            user.Longitude = request.Longitude;
+
+            _context.MobileUsers.Update(user);
+            await _context.SaveChangesAsync();
+
+            return Result.Success(true);
+        }
+
 
     }
 

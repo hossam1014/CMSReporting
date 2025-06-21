@@ -15,5 +15,7 @@ namespace Application.Interfaces.MobileApp
         Task<Result> SubmitEmergencyReport(EmergencyReportRequest request);
         Task<Result> AddFeedback(FeedBack feedback);
         Task<List<FeedBack>> GetAllFeedbacks();
+        Task<Result<bool>> UpdateLocationAsync(string userId, UpdateLocationRequest request);
+
     }
 }

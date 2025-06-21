@@ -31,6 +31,22 @@ namespace API.Controllers.MobileApp
             );
         }
 
+        [HttpPost("update-location")]
+        public async Task<IActionResult> UpdateLocation(UpdateLocationRequest request)
+        {
+            var userId = User.FindFirst("uid")?.Value; 
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var result = await _reportRepo.UpdateLocationAsync(userId, request);
+
+            return result.Match(
+                onSuccess: () => Ok(result),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
+            );
+        }
+
+
         [HttpPost("emergency")]
         public async Task<IActionResult> SubmitEmergencyReport([FromBody] EmergencyReportRequest request)
         {

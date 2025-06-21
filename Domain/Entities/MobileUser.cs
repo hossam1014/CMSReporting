@@ -16,6 +16,8 @@ namespace Domain.Entities
 
         public DateTime CreatedAt { get; set; }
 
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         public ICollection<NotificationUser> NotificationUsers { get; set; }
 

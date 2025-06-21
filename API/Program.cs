@@ -6,19 +6,51 @@ using Application.Interfaces;
 using Application.Interfaces.Dashboard;
 using Application.Interfaces.MobileApp;
 using Application.Repositories.MobileApp;
+using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Extensions;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme,
+        securityScheme: new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Description = "Please enter token",
+            Type = SecuritySchemeType.ApiKey,
+            In=ParameterLocation.Header,
+            Scheme = "Bearer"
+        });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+}
+
+
+);
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
@@ -59,9 +91,10 @@ using (IServiceScope scope = app.Services.CreateScope())
     // var uow = service.GetRequiredService<IUnitOfWork>();
     await context.Database.MigrateAsync();
     await Seed.SeedData(context);
-    await SeedUsersAndRoles.SeedUsers(userManager, roleManager, context);
-  }
-  catch (Exception ex)
+   // var mapper = service.GetRequiredService<IMapper>();
+        await SeedUsersAndRoles.SeedUsers(userManager, roleManager, context); //, mapper);
+    }
+    catch (Exception ex)
   {
     var logger = loggerFactory.CreateLogger<Program>();
     logger.LogError(ex, "An error occurred seeding the DB.");
