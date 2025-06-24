@@ -230,7 +230,7 @@ namespace Infrastructure.Repositories.Dashboard
 
 
         public async Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync()
-    {
+        {
         var result = await _context.IssueReports
             .Where(r => !r.IsDeleted)
             .GroupBy(r => new { r.DateIssued.Year, r.DateIssued.Month })
@@ -252,7 +252,7 @@ namespace Infrastructure.Repositories.Dashboard
         }).ToList();
 
         return finalResult;
-    }
+        }
 
         public async Task<CriticalReportsDto> GetCriticalReportsDashboardAsync()
         {
@@ -328,8 +328,24 @@ namespace Infrastructure.Repositories.Dashboard
                 YearlyChangePercentage = Math.Round(yearlyChange, 2)
             };
         }
+        public async Task<Result> UpdateReportCategory(ChangeReportCategory changeReportCategory)
+        {
+            var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
+            if (userId == null) return Result.Failure<ReportResponse>(AuthErrors.Unauthorized);
 
-       
+            var report = await _context.IssueReports.FirstOrDefaultAsync(x => x.Id == changeReportCategory.ReportId);
+            if (report == null) return Result.Failure<ReportResponse>(ReportErrors.NotFound);
+
+            var category = await _context.IssueCategories.FirstOrDefaultAsync(c => c.Id == changeReportCategory.CategoryId);
+            if (category == null) return Result.Failure<ReportResponse>(ReportErrors.CategoryNotFound);
+
+            report.IssueCategoryId = changeReportCategory.CategoryId;
+
+            await _context.SaveChangesAsync();
+            return Result.Success();
+        }
+
+
     }
 
 }

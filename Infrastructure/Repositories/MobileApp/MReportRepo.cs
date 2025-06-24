@@ -72,7 +72,7 @@ namespace Application.Repositories.MobileApp
             return Result.Success();
         }
 
-        
+      
 
         public async Task<Result<List<MReportResponse>>> GetReportsByUserId()
         {

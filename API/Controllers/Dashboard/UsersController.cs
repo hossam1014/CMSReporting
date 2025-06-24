@@ -50,12 +50,13 @@ namespace API.Controllers.Dashboard
             return Ok("User updated successfully");
         }
 
-        [HttpPut("{id}/change-password")]
+        [HttpPut("change-password")]
         [Authorize]
-        public async Task<IActionResult> ChangePassword(string id, [FromBody] ChangePasswordDto dto)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
+
             var currentUserId = _userManager.GetUserId(User);
-            var result = await _userService.ChangePasswordAsync(id, dto, currentUserId);
+            var result = await _userService.ChangePasswordAsync(currentUserId, dto);
             if (!result) return BadRequest("Error changing password");
             return Ok("Password changed successfully");
         }

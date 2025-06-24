@@ -65,6 +65,18 @@ namespace API.Controllers.Dashboard
             return Ok(reports);
         }
 
+        [HttpPut("update-category")]
+        [Authorize(Policy = "DashboardPolicy")]
+        public async Task<IActionResult> UpdateReportCategory(ChangeReportCategory changeReportCategory)
+        {
+            var result = await _reportRepo.UpdateReportCategory(changeReportCategory);
+
+            return result.Match(
+                onSuccess: () => Ok(new { message = "Category updated successfully" }),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
+            );
+        }
+
 
     }
 }

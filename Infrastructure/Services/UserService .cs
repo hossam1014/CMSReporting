@@ -117,15 +117,13 @@ public class UserService : IUserService
         return true;
     }
 
-    public async Task<bool> ChangePasswordAsync(string id, ChangePasswordDto dto, string requesterId)
+    public async Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto dto)
     {
-        var user = await _userManager.FindByIdAsync(id);
+        var user = await _userManager.FindByIdAsync(userId);
         if (user == null) return false;
-
-        if (id != requesterId)
-            return false; 
 
         var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
         return result.Succeeded;
     }
+
 }

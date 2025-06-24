@@ -25,7 +25,9 @@ namespace Application.Interfaces.Dashboard
         Task<List<SocialMediaReportDto>> GetSocialMediaReports(DateTime? from, DateTime? to, string keyword, string language = "ar");
         Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync();
         Task<CriticalReportsDto> GetCriticalReportsDashboardAsync();
-       // Task<List<SocialMediaReportDto>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword);
+        Task<Result> UpdateReportCategory(ChangeReportCategory changeReportCategory);
+
+        // Task<List<SocialMediaReportDto>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword);
 
 
     }

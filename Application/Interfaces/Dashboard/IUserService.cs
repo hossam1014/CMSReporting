@@ -12,6 +12,6 @@ namespace Application.Interfaces.Dashboard
         Task<List<UserWithRolesDto>> GetUsersWithRolesAsync();
         Task<bool> CreateUserAsync(CreateUserDto dto);
         Task<bool> UpdateUserAsync(string id, UpdateUserDto dto);
-        Task<bool> ChangePasswordAsync(string id, ChangePasswordDto dto, string requesterId);
+        Task<bool> ChangePasswordAsync(string userId, ChangePasswordDto dto);
     }
 }
