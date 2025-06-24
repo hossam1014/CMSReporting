@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -108,7 +108,9 @@ namespace Infrastructure.Migrations
                     FullName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,25 +224,27 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FeedBacks",
+                name: "UserCategories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    RateValue = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MobileUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeedBacks", x => x.Id);
+                    table.PrimaryKey("PK_UserCategories", x => new { x.UserId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_FeedBacks_MobileUsers_MobileUserId",
-                        column: x => x.MobileUserId,
-                        principalTable: "MobileUsers",
-                        principalColumn: "Id");
+                        name: "FK_UserCategories_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserCategories_IssueCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "IssueCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,6 +303,35 @@ namespace Infrastructure.Migrations
                         principalTable: "IssueReports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeedBacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Comment = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    RateValue = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MobileUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IssueReportId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeedBacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FeedBacks_IssueReports_IssueReportId",
+                        column: x => x.IssueReportId,
+                        principalTable: "IssueReports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FeedBacks_MobileUsers_MobileUserId",
+                        column: x => x.MobileUserId,
+                        principalTable: "MobileUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -455,6 +488,11 @@ namespace Infrastructure.Migrations
                 column: "EmergencyServiceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FeedBacks_IssueReportId",
+                table: "FeedBacks",
+                column: "IssueReportId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FeedBacks_MobileUserId",
                 table: "FeedBacks",
                 column: "MobileUserId");
@@ -503,6 +541,11 @@ namespace Infrastructure.Migrations
                 name: "IX_ReportStatusHistories_UserId",
                 table: "ReportStatusHistories",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserCategories_CategoryId",
+                table: "UserCategories",
+                column: "CategoryId");
         }
 
         /// <inheritdoc />
@@ -537,6 +580,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "SocialMediaReports");
+
+            migrationBuilder.DropTable(
+                name: "UserCategories");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -17,5 +17,7 @@ namespace Domain.Entities
         public DateTime LastSeen { get; set; }
 
         public string DefaultLanguage { get; set; }
+        public ICollection<UserCategory> UserCategories { get; set; }
+
     }
 }

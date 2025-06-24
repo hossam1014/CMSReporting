@@ -36,16 +36,34 @@ namespace Infrastructure.Repositories.Dashboard
         }
         public async Task<Result<PagedList<ReportResponse>>> GetAllReports(BaseParams reportParams)
         {
+
+            var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
+
+            var user = await _context.Users
+                .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+                .Include(u => u.UserCategories)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            var isAdmin = user.UserRoles.Any(r => r.Role.Name == "Admin");
+
+
+
             var reportsQuery = _context.IssueReports.AsNoTracking()
                                                 .Where(x => !x.IsDeleted &&
                                                             (string.IsNullOrEmpty(reportParams.Keyword) || x.Description.Contains(reportParams.Keyword)) &&
                                                             (reportParams.From == null || x.DateIssued >= reportParams.From) &&
-                                                            (reportParams.To == null || x.DateIssued <= reportParams.To))
-                                                .OrderByDescending(x => x.DateIssued)
-                                                .ProjectTo<ReportResponse>(_mapper.ConfigurationProvider);
+                                                            (reportParams.To == null || x.DateIssued <= reportParams.To));
+            if (!isAdmin)
+            {
+                var userCategoryIds = user.UserCategories.Select(uc => uc.CategoryId).ToList();
+                reportsQuery = reportsQuery.Where(r => userCategoryIds.Contains(r.IssueCategoryId));
+            }
 
-            var result = await PagedList<ReportResponse>.CreateAsync(reportsQuery, reportParams);
+            var projectedQuery = reportsQuery
+                    .OrderByDescending(x => x.DateIssued)
+                    .ProjectTo<ReportResponse>(_mapper.ConfigurationProvider);
 
+            var result = await PagedList<ReportResponse>.CreateAsync(projectedQuery, reportParams);
             return Result.Success(result);
 
         }

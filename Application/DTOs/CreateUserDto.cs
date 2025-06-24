@@ -12,5 +12,7 @@ namespace Application.DTOs
         public string Password { get; set; }
         public string FullName { get; set; }
         public List<string> Roles { get; set; }
+        public List<int> CategoryIds { get; set; }
+
     }
 }

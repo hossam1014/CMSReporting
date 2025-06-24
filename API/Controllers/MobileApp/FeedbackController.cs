@@ -25,11 +25,16 @@ namespace API.Controllers
             if (request.RateValue < 1 || request.RateValue > 5)
                 return BadRequest("Rating must be between 1 and 5.");
 
+            var exists = await _mReportRepo.IsUserReportExistsAsync(request.IssueReportId, request.MobileUserId);
+            if (!exists)
+                return BadRequest("Invalid report ID or this report doesn't belong to this user.");
+
             var feedback = new FeedBack
             {
                 Comment = request.Comment,
                 RateValue = request.RateValue,
                 MobileUserId = request.MobileUserId,
+                IssueReportId = request.IssueReportId,
                 Date = DateTime.UtcNow
             };
 
@@ -54,7 +59,8 @@ namespace API.Controllers
                 Date = f.Date,
                 MobileUserId = f.MobileUserId,
                 MobileUserName = f.MobileUser?.FullName,    
-                MobileUserPhone = f.MobileUser?.PhoneNumber
+                MobileUserPhone = f.MobileUser?.PhoneNumber,
+                IssueReportId = f.IssueReportId
             }).ToList();
 
             return Ok(feedbackDtos);

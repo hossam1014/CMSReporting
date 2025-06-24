@@ -213,6 +213,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("IssueReportId")
+                        .HasColumnType("int");
+
                     b.Property<string>("MobileUserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -220,6 +223,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IssueReportId");
 
                     b.HasIndex("MobileUserId");
 
@@ -445,6 +450,21 @@ namespace Infrastructure.Migrations
                     b.ToTable("NotificationUsers");
                 });
 
+            modelBuilder.Entity("Domain.Entities.UserCategory", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("UserCategories");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -589,9 +609,17 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.FeedBack", b =>
                 {
+                    b.HasOne("Domain.Entities.IssueReport", "IssueReport")
+                        .WithMany()
+                        .HasForeignKey("IssueReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.MobileUser", "MobileUser")
                         .WithMany("FeedBacks")
                         .HasForeignKey("MobileUserId");
+
+                    b.Navigation("IssueReport");
 
                     b.Navigation("MobileUser");
                 });
@@ -679,6 +707,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Notification");
                 });
 
+            modelBuilder.Entity("Domain.Entities.UserCategory", b =>
+                {
+                    b.HasOne("Domain.Entities.IssueCategory", "Category")
+                        .WithMany("UserCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppUser", "User")
+                        .WithMany("UserCategories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Domain.Entities.AppRole", null)
@@ -748,12 +795,16 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppUser", b =>
                 {
+                    b.Navigation("UserCategories");
+
                     b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("Domain.Entities.IssueCategory", b =>
                 {
                     b.Navigation("SubCategories");
+
+                    b.Navigation("UserCategories");
                 });
 
             modelBuilder.Entity("Domain.Entities.MobileUser", b =>

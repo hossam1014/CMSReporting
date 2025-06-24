@@ -10,4 +10,6 @@ public class FeedbackRequest
     public string Comment { get; set; }
     public int RateValue { get; set; }
     public string MobileUserId { get; set; }
+    public int IssueReportId { get; set; }
+
 }

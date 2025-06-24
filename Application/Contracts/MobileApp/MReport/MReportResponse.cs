@@ -16,5 +16,6 @@ namespace Application.Contracts.MobileApp.MReport
         public double Longitude { get; init; }
         public string Address { get; init; }
         public string ImageUrl { get; init; }
+        public bool IsRated { get; set; }
     }
 }

@@ -72,21 +72,48 @@ namespace Application.Repositories.MobileApp
             return Result.Success();
         }
 
+        
+
         public async Task<Result<List<MReportResponse>>> GetReportsByUserId()
         {
-
             var userId = _httpContextAccessor.HttpContext?.User.GetUserId();
             if (userId == null)
                 return Result.Failure<List<MReportResponse>>(AuthErrors.UserNotFound);
 
-            var reports = await _context.IssueReports.AsNoTracking()
-                                                    .Where(x => x.MobileUserId == userId)
-                                                    .ProjectTo<MReportResponse>(_mapper.ConfigurationProvider)
-                                                    .ToListAsync();
+            // Get user's reports
+            var reports = await _context.IssueReports
+                                        .AsNoTracking()
+                                        .Where(x => x.MobileUserId == userId)
+                                        .Include(x => x.IssueCategory)
+                                        .ToListAsync();
 
-            return Result.Success(reports);
+            // Get all feedbacks submitted by this user
+            var userFeedbackReportIds = await _context.FeedBacks
+                                                       .Where(f => f.MobileUserId == userId)
+                                                       .Select(f => f.IssueReportId)
+                                                       .ToListAsync();
 
+            //  mapping
+            var reportDtos = reports.Select(report => new MReportResponse
+            {
+                Description = report.Description,
+                IssueCategoryAR = report.IssueCategory?.NameAR,
+                IssueCategoryEN = report.IssueCategory?.NameEN,
+                DateIssued = report.DateIssued,
+                ReportStatus = report.ReportStatus.ToString(),
+                Latitude = report.Latitude,
+                Longitude = report.Longitude,
+                Address = report.Address,
+                ImageUrl = report.ImageUrl,
+                IsRated = userFeedbackReportIds.Contains(report.Id) 
+            }).ToList();
 
+            return Result.Success(reportDtos);
+        }
+
+        public async Task<bool> IsUserReportExistsAsync(int reportId, string userId)
+        {
+            return await _context.IssueReports.AnyAsync(r => r.Id == reportId && r.MobileUserId == userId);
         }
 
         public async Task<Result> SubmitEmergencyReport(EmergencyReportRequest request)
@@ -128,16 +155,12 @@ namespace Application.Repositories.MobileApp
         }
         public async Task<Result> AddFeedback(FeedBack feedback)
         {
-            try
-            {
+            
+            
                 await _context.FeedBacks.AddAsync(feedback);
                 await _context.SaveChangesAsync();
                 return Result.Success();
-            }
-            catch (Exception)
-            {
-                return Result.Failure(MReportErrors.FeedbackSaveFailed);
-            }
+                        
         }
 
         public async Task<List<FeedBack>> GetAllFeedbacks()

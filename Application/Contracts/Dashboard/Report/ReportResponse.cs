@@ -29,5 +29,7 @@ namespace Application.Contracts.Dashboard.Report
 
         public string Address { get; set; }
 
+
+
     }
 }

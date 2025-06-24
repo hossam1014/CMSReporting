@@ -13,6 +13,8 @@ namespace Application.Interfaces.MobileApp
         Task<Result> AddReport(MAddReport addReport);
         Task<Result<List<MReportResponse>>> GetReportsByUserId();
         Task<Result> SubmitEmergencyReport(EmergencyReportRequest request);
+        Task<bool> IsUserReportExistsAsync(int reportId, string userId);
+
         Task<Result> AddFeedback(FeedBack feedback);
         Task<List<FeedBack>> GetAllFeedbacks();
         Task<Result<bool>> UpdateLocationAsync(string userId, UpdateLocationRequest request);

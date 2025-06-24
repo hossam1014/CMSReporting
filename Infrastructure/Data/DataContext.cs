@@ -32,6 +32,8 @@ namespace Infrastructure.Data
         public DbSet<FeedBack> FeedBacks { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }
         public DbSet<IssueReport> IssueReports { get; set; }
+        public DbSet<UserCategory> UserCategories { get; set; }
+
 
         public DbSet<IssueReportStatusHistory> ReportStatusHistories { get; set; }
 
@@ -61,7 +63,21 @@ namespace Infrastructure.Data
                   .HasOne(f => f.MobileUser)
                   .WithMany(u => u.FeedBacks)
                   .HasForeignKey(f => f.MobileUserId)
-                  .IsRequired(false); 
+                  .IsRequired(false);
+
+            builder.Entity<UserCategory>()
+                 .HasKey(uc => new { uc.UserId, uc.CategoryId });
+
+            builder.Entity<UserCategory>()
+                .HasOne(uc => uc.User)
+                .WithMany(u => u.UserCategories)
+                .HasForeignKey(uc => uc.UserId);
+
+            builder.Entity<UserCategory>()
+                .HasOne(uc => uc.Category)
+                .WithMany(c => c.UserCategories)
+                .HasForeignKey(uc => uc.CategoryId);
+
 
         }
     }

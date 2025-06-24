@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Interfaces.Dashboard;
 using Domain.Entities;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +10,15 @@ public class UserService : IUserService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<AppRole> _roleManager;
+    private readonly DataContext _context;
 
-    public UserService(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    public UserService(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, DataContext context)
+
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _context = context;
+
     }
 
     public async Task<List<UserWithRolesDto>> GetUsersWithRolesAsync()
@@ -47,6 +52,22 @@ public class UserService : IUserService
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded) return false;
 
+        if (dto.CategoryIds != null && dto.CategoryIds.Any())
+        {
+            foreach (var catId in dto.CategoryIds)
+            {
+                _context.UserCategories.Add(new UserCategory
+                {
+                    UserId = user.Id,
+                    CategoryId = catId
+                });
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+       
+
         foreach (var role in dto.Roles)
         {
             if (await _roleManager.RoleExistsAsync(role))
@@ -75,7 +96,24 @@ public class UserService : IUserService
                 await _userManager.AddToRoleAsync(user, role);
         }
 
+        var existingCategories = _context.UserCategories.Where(uc => uc.UserId == user.Id);
+        _context.UserCategories.RemoveRange(existingCategories);
+
+        if (dto.CategoryIds != null && dto.CategoryIds.Any())
+        {
+            foreach (var catId in dto.CategoryIds)
+            {
+                _context.UserCategories.Add(new UserCategory
+                {
+                    UserId = user.Id,
+                    CategoryId = catId
+                });
+            }
+        }
+
         await _userManager.UpdateAsync(user);
+        await _context.SaveChangesAsync();
+
         return true;
     }
 

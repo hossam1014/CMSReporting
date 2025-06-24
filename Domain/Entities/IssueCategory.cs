@@ -16,5 +16,7 @@ namespace Domain.Entities
 
         public int? ParentCategoryId { get; set; }
         public IssueCategory ParentCategory { get; set; }
+        public ICollection<UserCategory> UserCategories { get; set; }
+
     }
 }

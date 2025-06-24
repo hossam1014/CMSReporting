@@ -15,5 +15,7 @@ namespace Domain.Entities
        
         public string MobileUserId { get; set; }
         public MobileUser MobileUser { get; set; }
+        public int IssueReportId { get; set; }  
+        public IssueReport IssueReport { get; set; }
     }
 }

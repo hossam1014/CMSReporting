@@ -15,5 +15,7 @@ namespace Application.DTOs
         public string MobileUserId { get; set; }
         public string MobileUserName { get; set; }
         public string MobileUserPhone { get; set; }
+        public int IssueReportId { get; set; }
+
     }
 }

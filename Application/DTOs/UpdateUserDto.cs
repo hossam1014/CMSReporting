@@ -11,5 +11,7 @@ namespace Application.DTOs
        // public string Email { get; set; }
         public string FullName { get; set; }
         public List<string> Roles { get; set; }
+        public List<int> CategoryIds { get; set; }
+
     }
 }
