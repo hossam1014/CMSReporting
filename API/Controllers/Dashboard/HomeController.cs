@@ -46,12 +46,7 @@ namespace API.Controllers.Dashboard
             return Ok(result);
         }
 
-        [HttpGet("reports/top-categories")]
-        public async Task<IActionResult> GetTopReportedCategories()
-        {
-            var result = await _reportRepo.GetTopReportedCategoriesAsync();
-            return Ok(result);
-        }
+
         [HttpGet("feedback/recent")]
         public async Task<IActionResult> GetRecentFeedback()
         {

@@ -177,23 +177,7 @@ namespace Infrastructure.Repositories.Dashboard
                 })
                 .ToListAsync();
         }
-        public async Task<List<TopCategoryDto>> GetTopReportedCategoriesAsync()
-        {
-            return await _context.IssueReports
-                .Include(r => r.IssueCategory)
-                .Where(r => !r.IsDeleted)
-                .GroupBy(r => r.IssueCategory.Key)
-                .OrderByDescending(g => g.Count())
-                .Take(5)
-                .Select(g => new TopCategoryDto
-                {
-                    // Category = g.Key,
-                    CategoryAR = g.FirstOrDefault().IssueCategory.NameAR,
-                    CategoryEN = g.FirstOrDefault().IssueCategory.NameEN,
-                    Count = g.Count()
-                })
-                .ToListAsync();
-        }
+       
         public async Task<List<FeedBackDto>> GetRecentFeedbackAsync()
         {
             return await _context.FeedBacks
@@ -349,19 +333,33 @@ namespace Infrastructure.Repositories.Dashboard
         public async Task<Result> UpdateReportCategory(ChangeReportCategory changeReportCategory)
         {
             var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
-            if (userId == null) return Result.Failure<ReportResponse>(AuthErrors.Unauthorized);
+            if (userId == null)
+                return Result.Failure<ReportResponse>(AuthErrors.Unauthorized);
 
             var report = await _context.IssueReports.FirstOrDefaultAsync(x => x.Id == changeReportCategory.ReportId);
-            if (report == null) return Result.Failure<ReportResponse>(ReportErrors.NotFound);
+            if (report == null)
+                return Result.Failure<ReportResponse>(ReportErrors.NotFound);
 
-            var category = await _context.IssueCategories.FirstOrDefaultAsync(c => c.Id == changeReportCategory.CategoryId);
-            if (category == null) return Result.Failure<ReportResponse>(ReportErrors.CategoryNotFound);
+            IssueCategory category = null;
 
-            report.IssueCategoryId = changeReportCategory.CategoryId;
+            if (changeReportCategory.CategoryId.HasValue)
+            {
+                category = await _context.IssueCategories.FirstOrDefaultAsync(c => c.Id == changeReportCategory.CategoryId.Value);
+            }
+            else if (!string.IsNullOrEmpty(changeReportCategory.CategoryKey))
+            {
+                category = await _context.IssueCategories.FirstOrDefaultAsync(c => c.Key == changeReportCategory.CategoryKey);
+            }
+
+            if (category == null)
+                return Result.Failure<ReportResponse>(ReportErrors.CategoryNotFound);
+
+            report.IssueCategoryId = category.Id;
 
             await _context.SaveChangesAsync();
             return Result.Success();
         }
+
 
 
     }

@@ -50,6 +50,7 @@ namespace Infrastructure.Extensions
       services.AddScoped<IFileRepo, FileRepo>();
       services.AddScoped<IMReportRepo, MReportRepo>();
       services.AddScoped<IRoleService, RoleService>();
+      services.AddScoped<ICategoryRepo, CategoryRepo>();
 
 
             // // Serilog

@@ -20,7 +20,6 @@ namespace Application.Interfaces.Dashboard
         Task<Result<int>> NumberOfReports();
         Task<ReportSummaryDto> GetReportSummaryAsync();
         Task<List<EmergencyAlertDto>> GetEmergencyAlertsAsync();
-        Task<List<TopCategoryDto>> GetTopReportedCategoriesAsync();
         Task<List<FeedBackDto>> GetRecentFeedbackAsync();
         Task<List<SocialMediaReportDto>> GetSocialMediaReports(DateTime? from, DateTime? to, string keyword, string language = "ar");
         Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync();

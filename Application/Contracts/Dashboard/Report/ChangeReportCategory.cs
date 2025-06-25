@@ -9,6 +9,9 @@ namespace Application.Contracts.Dashboard.Report
   public  class ChangeReportCategory
     {
         public int ReportId { get; set; }
-        public int CategoryId { get; set; }
+        public int? CategoryId { get; set; }
+
+        public string? CategoryKey { get; set; }
     }
 }
+
