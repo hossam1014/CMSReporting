@@ -42,7 +42,9 @@ namespace API.Controllers.Dashboard
             );
         }
 
-        [HttpPut]
+        [HttpPut("update-ReportStatus")]
+        [Authorize(Policy = "DashboardPolicy")]
+
         public async Task<IActionResult> UpdateReportStatus(ChangeReportStatus changeReportStatus)
         {
             var result = await _reportRepo.UpdateReportStatus(changeReportStatus);

@@ -73,6 +73,23 @@ namespace Infrastructure.Repositories.Dashboard
             var report = await _context.IssueReports.Where(x => !x.IsDeleted && x.Id == id)
                                                     .ProjectTo<ReportResponse>(_mapper.ConfigurationProvider)
                                                     .FirstOrDefaultAsync();
+            if (report == null)
+                return Result.Failure<ReportResponse>(ReportErrors.NotFound);
+
+            // Get status history
+            var history = await _context.ReportStatusHistories
+                .Where(h => h.IssueReportId == id)
+                .OrderBy(h => h.CreatedAt)
+                .Select(h => new ReportStatusHistoryDto
+                {
+                    Status = h.ReportStatus.ToString(),
+                    ChangedBy = h.User.UserName, 
+                    ChangedAt = h.CreatedAt,
+                    Comment = h.Comment
+                })
+                .ToListAsync();
+
+            report.StatusHistory = history;
 
             return Result.Success(report);
 
@@ -94,7 +111,8 @@ namespace Infrastructure.Repositories.Dashboard
                 IssueReportId = report.Id,
                 CreatedAt = DateTime.UtcNow,
                 ReportStatus = changeReportStatus.Status,
-                UserId = userId
+                UserId = userId,
+                 Comment = changeReportStatus.Comment
             };
 
             await _context.ReportStatusHistories.AddAsync(newRecord);

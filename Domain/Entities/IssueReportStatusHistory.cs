@@ -17,5 +17,6 @@ namespace Domain.Entities
         public AppUser User { get; set; }
 
         public DateTime CreatedAt { get; set; }
+        public string Comment { get; set; }
     }
 }

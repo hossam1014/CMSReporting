@@ -10,5 +10,6 @@ namespace Application.Contracts.Dashboard.Report
     {
         public int ReportId { get; set; }
         public EReportStatus Status { get; set; }
+        public string Comment { get; set; }
     }
 }

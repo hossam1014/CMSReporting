@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.DTOs;
 using Domain.Enums;
 
 namespace Application.Contracts.Dashboard.Report
@@ -29,6 +30,7 @@ namespace Application.Contracts.Dashboard.Report
 
         public string Address { get; set; }
 
+        public List<ReportStatusHistoryDto> StatusHistory { get; set; }
 
 
     }
