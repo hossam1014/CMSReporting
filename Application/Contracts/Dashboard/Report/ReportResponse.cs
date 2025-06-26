@@ -13,7 +13,7 @@ namespace Application.Contracts.Dashboard.Report
         public string Description { get; set; }
 
         public string ImageUrl { get; set; }
-
+        
         public string IssueCategoryAR { get; set; }
         public string IssueCategoryEN { get; set; }
 
