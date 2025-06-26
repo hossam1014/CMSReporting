@@ -31,10 +31,10 @@ namespace Infrastructure.Repositories.MobileApp
                 .FirstOrDefaultAsync(r => r.Id == dto.ReportId && !r.IsDeleted);
 
             if (report == null)
-                return Result.Failure("Report not found.");
+                return Result.Failure(new Error("NotFound", "Report not found."));
 
             if (report.MobileUserId != userId)
-                return Result.Failure("You can only share your own reports.");
+                return Result.Failure(new Error("Unauthorized", "You are not authorized to share this report."));
 
             string imageUrl = report.ImageUrl;
             if (dto.Image != null)
