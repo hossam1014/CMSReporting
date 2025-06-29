@@ -21,6 +21,7 @@ namespace API.Extensions
                 return nameIdentifierClaim.Value;
             }
             return null;
+
         }
 
         public static string GetEmail(this ClaimsPrincipal user)

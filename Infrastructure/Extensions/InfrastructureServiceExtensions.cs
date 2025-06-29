@@ -43,14 +43,15 @@ namespace Infrastructure.Extensions
 
 
 
-      // Repositories
-      services.AddScoped<IReportRepo, ReportRepo>();
+            // Repositories
+            services.AddScoped<IReportRepo, ReportRepo>();
       services.AddScoped<IMEmergencyReportRepo, MEmergencyReportRepo>();
       services.AddScoped<IMNotificationRepo, MNotificationRepo>();
       services.AddScoped<IFileRepo, FileRepo>();
       services.AddScoped<IMReportRepo, MReportRepo>();
       services.AddScoped<IRoleService, RoleService>();
       services.AddScoped<ICategoryRepo, CategoryRepo>();
+      services.AddScoped<NotificationService>();
 
 
             // // Serilog

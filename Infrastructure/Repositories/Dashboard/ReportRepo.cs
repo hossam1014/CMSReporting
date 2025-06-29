@@ -38,12 +38,15 @@ namespace Infrastructure.Repositories.Dashboard
         {
 
             var userId = _httpContextAccessor.HttpContext?.User?.GetUserId();
+            if (userId == null) return Result.Failure<PagedList<ReportResponse>>(AuthErrors.Unauthorized);
+
 
             var user = await _context.Users
                 .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
                 .Include(u => u.UserCategories)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
+           
             var isAdmin = user.UserRoles.Any(r => r.Role.Name == "Admin");
 
 

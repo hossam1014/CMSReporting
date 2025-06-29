@@ -15,6 +15,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using MassTransit;
+using Domain.Events;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +56,8 @@ builder.Services.AddSwaggerGen(options =>
 
 );
 
+
+
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
@@ -66,7 +72,33 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddSignalR();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
+
+builder.Services.AddProblemDetails(); builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMQ:Host"], builder.Configuration["RabbitMQ:VirtualHost"], h =>
+        {
+            h.Username(builder.Configuration["RabbitMQ:Username"]);
+            h.Password(builder.Configuration["RabbitMQ:Password"]);
+        });
+
+        // Configure message type mapping
+        cfg.Message<NotificationMessage>(c =>
+        {
+            c.SetEntityName("NotificationMessage");
+        });
+
+        // Handle enum as strings 
+        cfg.ConfigureJsonSerializerOptions(options =>
+        {
+            options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            return options;
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 
 
