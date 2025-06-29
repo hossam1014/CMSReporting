@@ -24,10 +24,17 @@ namespace API.Controllers.Dashboard
         public async Task<IActionResult> GetReports([FromQuery] BaseParams reportParams)
         {
             var result = await _reportRepo.GetAllReports(reportParams);
+            
+            Response.AddPaginationHeader(
+                result.Value.CurrentPage,
+                result.Value.PageSize,
+                result.Value.TotalCount,
+                result.Value.TotalPages
+            );
 
             return result.Match(
-                onSuccess : () => Ok(result),
-                onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
+                onSuccess: () => Ok(result),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
 
