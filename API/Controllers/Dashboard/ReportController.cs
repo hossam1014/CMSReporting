@@ -24,7 +24,10 @@ namespace API.Controllers.Dashboard
         public async Task<IActionResult> GetReports([FromQuery] BaseParams reportParams)
         {
             var result = await _reportRepo.GetAllReports(reportParams);
-            
+
+            if (!result.IsSuccess)
+                return result.HandleFailure(StatusCodes.Status400BadRequest);
+
             Response.AddPaginationHeader(
                 result.Value.CurrentPage,
                 result.Value.PageSize,
@@ -32,10 +35,12 @@ namespace API.Controllers.Dashboard
                 result.Value.TotalPages
             );
 
-            return result.Match(
-                onSuccess: () => Ok(result),
-                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
-            );
+            //return result.Match(
+            //    onSuccess: () => Ok(result),
+            //    onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
+            //);
+            return Ok(result);
+
         }
 
         [HttpGet("{id}")]

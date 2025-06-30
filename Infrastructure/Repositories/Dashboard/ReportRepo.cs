@@ -51,11 +51,24 @@ namespace Infrastructure.Repositories.Dashboard
 
 
 
-            var reportsQuery = _context.IssueReports.AsNoTracking()
-                                                .Where(x => !x.IsDeleted &&
-                                                            (string.IsNullOrEmpty(reportParams.Keyword) || x.Description.Contains(reportParams.Keyword)) &&
-                                                            (reportParams.From == null || x.DateIssued >= reportParams.From) &&
-                                                            (reportParams.To == null || x.DateIssued <= reportParams.To));
+            var reportsQuery = _context.IssueReports
+                             .Include(x => x.MobileUser)
+                             .AsNoTracking()
+                             .Where(x =>
+                                    !x.IsDeleted &&
+                                    (
+                                        string.IsNullOrEmpty(reportParams.Keyword) ||
+                                        x.Description.ToLower().Contains(reportParams.Keyword.ToLower()) ||
+                                        (!string.IsNullOrEmpty(x.MobileUser.FullName) &&
+                                         x.MobileUser.FullName.ToLower().Contains(reportParams.Keyword.ToLower())) ||
+                                        (!string.IsNullOrEmpty(x.MobileUser.PhoneNumber) &&
+                                         x.MobileUser.PhoneNumber.ToLower().Contains(reportParams.Keyword.ToLower()))
+                                    ) &&
+                                    (reportParams.From == null || x.DateIssued >= reportParams.From) &&
+                                    (reportParams.To == null || x.DateIssued <= reportParams.To)
+                                );
+
+
             if (!isAdmin)
             {
                 var userCategoryIds = user.UserCategories.Select(uc => uc.CategoryId).ToList();
