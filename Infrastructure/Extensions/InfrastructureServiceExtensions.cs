@@ -16,6 +16,8 @@ using Serilog;
 using Microsoft.Extensions.Logging;
 using Infrastructure.Repositories;
 using Application.Repositories.MobileApp;
+using Application.Interfaces.SocialMedia;
+using Infrastructure.Services.SocialMedia;
 
 
 namespace Infrastructure.Extensions
@@ -51,7 +53,12 @@ namespace Infrastructure.Extensions
       services.AddScoped<IMReportRepo, MReportRepo>();
       services.AddScoped<IRoleService, RoleService>();
       services.AddScoped<ICategoryRepo, CategoryRepo>();
-      services.AddScoped<NotificationService>();
+      services.AddScoped<ISocialMediaService, SocialMediaService>();
+      services.AddScoped<ISocialMediaReportService, SocialMediaReportService>();
+
+
+            services.AddScoped<NotificationService>();
+
 
 
             // // Serilog

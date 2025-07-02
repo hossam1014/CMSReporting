@@ -21,10 +21,12 @@ namespace Application.Interfaces.Dashboard
         Task<ReportSummaryDto> GetReportSummaryAsync();
         Task<List<EmergencyAlertDto>> GetEmergencyAlertsAsync();
         Task<List<FeedBackDto>> GetRecentFeedbackAsync();
-        Task<List<SocialMediaReportDto>> GetSocialMediaReports(DateTime? from, DateTime? to, string keyword, string language = "ar");
+        Task<Result<PagedList<SocialMediaReportDto>>> GetSocialMediaReports(BaseParams reportParams, string language = "ar");
         Task<List<MonthlyReportCountDto>> GetMonthlyReportCountsAsync();
         Task<CriticalReportsDto> GetCriticalReportsDashboardAsync();
         Task<Result> UpdateReportCategory(ChangeReportCategory changeReportCategory);
+        Task<IssueReport> GetIssueReportEntityById(int id);
+
 
         // Task<List<SocialMediaReportDto>> GetSharedReportsAsync(DateTime? from, DateTime? to, string keyword);
 

@@ -16,7 +16,10 @@ using System.Threading.Tasks;
             public DateTime PostedAt { get; set; }
             public int Likes { get; set; }
             public int Shares { get; set; }
-        }
+            public int CommentsCount { get; set; }
+            public string PostUrl { get; set; }
+
     }
+}
 
 

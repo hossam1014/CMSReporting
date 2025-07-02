@@ -14,6 +14,7 @@ namespace Domain.Entities
 
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
-
+        public int CommentsCount { get; set; } = 0;       
+        public string PostUrl { get; set; }
     }
 }

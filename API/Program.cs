@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using MassTransit;
 using Domain.Events;
+using Application.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,7 +62,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
-
+builder.Services.AddHttpClient();
 
 
 
@@ -72,6 +73,10 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddSignalR();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.Configure<SocialMediaSettings>(
+    builder.Configuration.GetSection("SocialMediaSettings")
+);
+
 
 builder.Services.AddProblemDetails(); builder.Services.AddMassTransit(x =>
 {
