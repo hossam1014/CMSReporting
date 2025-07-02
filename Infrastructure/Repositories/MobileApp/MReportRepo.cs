@@ -96,6 +96,7 @@ namespace Application.Repositories.MobileApp
             //  mapping
             var reportDtos = reports.Select(report => new MReportResponse
             {
+                Id = report.Id,
                 Description = report.Description,
                 IssueCategoryAR = report.IssueCategory?.NameAR,
                 IssueCategoryEN = report.IssueCategory?.NameEN,

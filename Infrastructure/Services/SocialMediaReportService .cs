@@ -52,7 +52,7 @@ namespace Infrastructure.Services.SocialMedia
                 ? _settings.AdminPostUrl
                 : _settings.UserPostUrl;
 
-            // 3. نستخدم HttpClient عبر service للنداء على API الخارجية
+            // 3. نستخدم HttpClient 
             var shareSuccess = await _socialMediaService.ShareToPlatform(
                 endpoint,
                 token,
@@ -73,7 +73,7 @@ namespace Infrastructure.Services.SocialMedia
             {
                 var socialReport = new SocialMediaReport
                 {
-                    Id = report.Id,
+                    //Id = report.Id,
                     Description = report.Description,
                     ImageUrl = report.ImageUrl,
                     IssueCategoryId = report.IssueCategoryId,
@@ -87,16 +87,16 @@ namespace Infrastructure.Services.SocialMedia
                     CreatedAt = DateTime.UtcNow,
                     Content = report.Description,
                     Likes = 0,
-                    Shares = 1
-
+                    Shares = 1,
+                    CommentsCount = 0
                 };
 
-                _context.Entry(report).State = EntityState.Detached; // 🟢 تفصل القديم من التتبع
+               // _context.Entry(report).State = EntityState.Detached;  
                 _context.IssueReports.Add(socialReport);
             }
             else
             {
-                // لو متسجل بالفعل، نزود عدد الشيرز
+                // لو متسجل بالفعل، نزود عدد shares
                 var existing = await _context.IssueReports
                     .OfType<SocialMediaReport>()
                     .FirstOrDefaultAsync(r => r.Id == report.Id);

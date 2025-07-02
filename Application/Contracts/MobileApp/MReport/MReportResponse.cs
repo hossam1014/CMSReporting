@@ -7,6 +7,7 @@ namespace Application.Contracts.MobileApp.MReport
 {
     public class MReportResponse
     {
+        public int Id { get; init; }
         public string Description { get; init; }
         public string IssueCategoryAR { get; init; }
         public string IssueCategoryEN { get; init; }

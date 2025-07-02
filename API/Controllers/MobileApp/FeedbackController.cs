@@ -25,15 +25,20 @@ namespace API.Controllers
             if (request.RateValue < 1 || request.RateValue > 5)
                 return BadRequest("Rating must be between 1 and 5.");
 
-            var exists = await _mReportRepo.IsUserReportExistsAsync(request.IssueReportId, request.MobileUserId);
+            var userId = User.GetUserId();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in token.");
+
+            var exists = await _mReportRepo.IsUserReportExistsAsync(request.IssueReportId, userId);
             if (!exists)
                 return BadRequest("Invalid report ID or this report doesn't belong to this user.");
+
 
             var feedback = new FeedBack
             {
                 Comment = request.Comment,
                 RateValue = request.RateValue,
-                MobileUserId = request.MobileUserId,
+                MobileUserId = userId,
                 IssueReportId = request.IssueReportId,
                 Date = DateTime.UtcNow
             };
