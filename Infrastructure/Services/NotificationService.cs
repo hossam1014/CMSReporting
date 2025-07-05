@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Application.Interfaces.NotificationService;
+using Domain.Enums;
 using Domain.Events;
 using MassTransit;
 using MassTransit.Transports;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class NotificationService
+    public class NotificationService : INotificationService
     {
         private readonly IPublishEndpoint _publishEndpoint;
 
@@ -18,21 +19,13 @@ namespace Infrastructure.Services
         {
             _publishEndpoint = publishEndpoint;
         }
-        public async Task PublishEmergencyAlertAsync(string title, string body, List<string> userIds)
+
+        public async Task PublishNotificationAsync(NotificationMessage message, string routingKey)
         {
-            var message = new NotificationMessage
-            {
-                Title = title,
-                Body = body,
-                Type = NotificationType.Group,
-                Channels = new List<ChannelType> { ChannelType.Push, ChannelType.Email },
-                TargetUsers = userIds,
-                Category = NotificationCategory.Alert
-            };
             await _publishEndpoint.Publish(message, ctx =>
-        {
-            ctx.SetRoutingKey("user.notification.created");
-        });
+            {
+                ctx.SetRoutingKey(routingKey);
+            });
         }
     }
 }

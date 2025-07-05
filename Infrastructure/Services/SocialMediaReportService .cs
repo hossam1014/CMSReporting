@@ -1,113 +1,91 @@
-﻿using System;
-using System.Runtime;
-using System.Threading.Tasks;
-using Application.Abstractions; 
+﻿using System.Net.Http.Json;
+using Application.Abstractions;
 using Application.DTOs;
 using Application.Errors.SocialMedia;
-using Application.Interfaces.Dashboard;
 using Application.Interfaces.SocialMedia;
-using Application.Options;
 using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Data;
+using Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
-namespace Infrastructure.Services.SocialMedia
+public class SocialMediaReportService : ISocialMediaReportService
 {
+    private readonly DataContext _context;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly SocialMediaApiOptions _apiOptions;
 
-    public class SocialMediaReportService : ISocialMediaReportService
+    public SocialMediaReportService(
+        DataContext context,
+        IHttpClientFactory httpClientFactory,
+        IOptions<SocialMediaApiOptions> apiOptions)
     {
-        private readonly DataContext _context;
-        private readonly ISocialMediaService _socialMediaService;
-        private readonly IConfiguration _config;
-        private readonly IReportRepo _reportRepo;
-        private readonly SocialMediaSettings _settings;
+        _context = context;
+        _httpClientFactory = httpClientFactory;
+        _apiOptions = apiOptions.Value;
+    }
 
+    public async Task<Result> ShareReportAsync(ShareReportRequest request, bool isAdmin, string userId = null, string userToken = null)
+    {
+        IssueReport report;
 
-        public SocialMediaReportService(
-            DataContext context,
-            ISocialMediaService socialMediaService,
-            IConfiguration config,
-            IReportRepo reportRepo,
-            IOptions<SocialMediaSettings> settings)
+        if (isAdmin)
         {
-            _context = context;
-            _socialMediaService = socialMediaService;
-            _config = config;
-            _reportRepo = reportRepo;
-            _settings = settings.Value;
+            report = await _context.IssueReports
+                .Include(r => r.IssueCategory)
+                .FirstOrDefaultAsync(r => r.Id == request.ReportId);
 
-        }
-
-        public async Task<Result> ShareReportAsync(ShareReportRequest request, string userId, string token)
-        {
-            // 1. نجيب البلاغ
-            var report = await _reportRepo.GetIssueReportEntityById(request.ReportId);
             if (report == null)
                 return Result.Failure(SocialMediaErrors.ReportNotFound);
-
-            // 2. نحدد الـ endpoint بناءً على نوع المشاركة
-            string endpoint = request.Platform == "AdminPost"
-                ? _settings.AdminPostUrl
-                : _settings.UserPostUrl;
-
-            // 3. نستخدم HttpClient 
-            var shareSuccess = await _socialMediaService.ShareToPlatform(
-                endpoint,
-                token,
-                caption: report.Description,
-                tag: report.IssueCategory?.NameEN ?? "CityReport",
-                mediaUrl: report.ImageUrl
-            );
-
-            if (!shareSuccess)
-                return Result.Failure(SocialMediaErrors.ShareFailed);
-
-            // 4. نحفظ البلاغ في جدول SocialMediaReports لو مش متسجل قبل كده
-            var alreadyShared = await _context.IssueReports
-                .OfType<SocialMediaReport>()
-                .AnyAsync(r => r.Id == report.Id);
-
-             if (!alreadyShared)
-            {
-                var socialReport = new SocialMediaReport
-                {
-                    //Id = report.Id,
-                    Description = report.Description,
-                    ImageUrl = report.ImageUrl,
-                    IssueCategoryId = report.IssueCategoryId,
-                    MobileUserId = report.MobileUserId,
-                    ReportStatus = report.ReportStatus,
-                    DateIssued = report.DateIssued,
-                    ReportType = report.ReportType,
-                    Latitude = report.Latitude,
-                    Longitude = report.Longitude,
-                    Address = report.Address,
-                    CreatedAt = DateTime.UtcNow,
-                    Content = report.Description,
-                    Likes = 0,
-                    Shares = 1,
-                    CommentsCount = 0
-                };
-
-               // _context.Entry(report).State = EntityState.Detached;  
-                _context.IssueReports.Add(socialReport);
-            }
-            else
-            {
-                // لو متسجل بالفعل، نزود عدد shares
-                var existing = await _context.IssueReports
-                    .OfType<SocialMediaReport>()
-                    .FirstOrDefaultAsync(r => r.Id == report.Id);
-
-                existing.Shares += 1;
-            }
-
-            await _context.SaveChangesAsync();
-
-            return Result.Success();
         }
-    }
-}
+        else
+        {
+            report = await _context.IssueReports
+                .Include(r => r.IssueCategory)
+                .FirstOrDefaultAsync(r => r.Id == request.ReportId && r.MobileUserId == userId);
 
+            if (report == null)
+                return Result.Failure(SocialMediaErrors.ReportNotFound);
+        }
+
+        var externalRequest = new ExternalShareRequest
+        {
+            Media = request.Media,
+            PostCaption = request.Caption,
+            Tag = request.Tag
+        };
+
+        var client = _httpClientFactory.CreateClient();
+
+        HttpResponseMessage response;
+        if (isAdmin)
+        {
+            response = await client.PostAsJsonAsync(_apiOptions.AdminShareUrl, externalRequest);
+        }
+        else
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {userToken}");
+            response = await client.PostAsJsonAsync(_apiOptions.UserShareUrl, externalRequest);
+        }
+
+        if (!response.IsSuccessStatusCode)
+            return Result.Failure(SocialMediaErrors.ShareFailed);
+
+        await SaveSharedReportAsync(report, request.Caption);
+        return Result.Success();
+    }
+    private async Task SaveSharedReportAsync(IssueReport report, string caption)
+    {
+        report.ReportType = EReportType.SocialMedia;
+
+
+
+        _context.Entry(report).State = EntityState.Modified;
+
+       // _context.IssueReports.Update(report);
+
+        await _context.SaveChangesAsync();
+    }
+
+}

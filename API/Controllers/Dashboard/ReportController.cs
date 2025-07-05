@@ -104,24 +104,7 @@ namespace API.Controllers.Dashboard
                 onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
-        [HttpPost("social-media/share")]
-        [Authorize]
-        public async Task<IActionResult> ShareReport([FromBody] ShareReportRequest request)
-        {
-            // نستخرج التوكن من الهيدر (في حالة UserPost)
-            var userToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-            // نستخرج UserId من التوكن
-            var userId = User.GetUserId(); 
-
-            var result = await _socialMediaReportService.ShareReportAsync(request, userId, userToken);
-
-            if (!result.IsSuccess)
-                return result.HandleFailure(StatusCodes.Status400BadRequest);
-
-            return Ok(new { message = "Report has been shared successfully." });
-        }
-
+        
 
     }
 }

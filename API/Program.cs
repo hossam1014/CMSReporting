@@ -17,8 +17,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using MassTransit;
+using Application.Interfaces.SocialMedia;
+using Infrastructure.Options;
+using System.Text.Json.Serialization;
 using Domain.Events;
-using Application.Options;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +67,9 @@ builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
+builder.Services.Configure<SocialMediaApiOptions>(
+builder.Configuration.GetSection("SocialMediaApi"));
+
 
 
 
@@ -73,12 +79,11 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddSignalR();
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.Configure<SocialMediaSettings>(
-    builder.Configuration.GetSection("SocialMediaSettings")
-);
 
 
-builder.Services.AddProblemDetails(); builder.Services.AddMassTransit(x =>
+
+
+builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -88,22 +93,21 @@ builder.Services.AddProblemDetails(); builder.Services.AddMassTransit(x =>
             h.Password(builder.Configuration["RabbitMQ:Password"]);
         });
 
-        // Configure message type mapping
         cfg.Message<NotificationMessage>(c =>
         {
             c.SetEntityName("NotificationMessage");
         });
 
-        // Handle enum as strings 
         cfg.ConfigureJsonSerializerOptions(options =>
         {
-            options.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            options.Converters.Add(new JsonStringEnumConverter());
             return options;
         });
 
         cfg.ConfigureEndpoints(context);
     });
 });
+
 
 
 
@@ -171,7 +175,7 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.MapControllers();
 
-app.UseExceptionHandler();
+//app.UseExceptionHandler();
 
 // app.MapFallbackToController("Index", "Fallback");
 

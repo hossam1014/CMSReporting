@@ -1,0 +1,16 @@
+﻿//using Domain.Events;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+
+//namespace Application.DTOs
+//{
+//   public class AdminEmergencyAlertRequest
+//    {
+//        public string Title { get; set; }
+//        public string Body { get; set; }
+//        public List<ChannelType> Channels { get; set; } = new();
+//    }
+//}

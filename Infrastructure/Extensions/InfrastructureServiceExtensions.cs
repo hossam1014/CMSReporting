@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 using Infrastructure.Repositories;
 using Application.Repositories.MobileApp;
 using Application.Interfaces.SocialMedia;
-using Infrastructure.Services.SocialMedia;
+using Application.Interfaces.NotificationService;
 
 
 namespace Infrastructure.Extensions
@@ -46,18 +46,16 @@ namespace Infrastructure.Extensions
 
 
             // Repositories
-            services.AddScoped<IReportRepo, ReportRepo>();
+      services.AddScoped<IReportRepo, ReportRepo>();
       services.AddScoped<IMEmergencyReportRepo, MEmergencyReportRepo>();
       services.AddScoped<IMNotificationRepo, MNotificationRepo>();
       services.AddScoped<IFileRepo, FileRepo>();
       services.AddScoped<IMReportRepo, MReportRepo>();
       services.AddScoped<IRoleService, RoleService>();
       services.AddScoped<ICategoryRepo, CategoryRepo>();
-      services.AddScoped<ISocialMediaService, SocialMediaService>();
       services.AddScoped<ISocialMediaReportService, SocialMediaReportService>();
 
-
-            services.AddScoped<NotificationService>();
+     services.AddScoped<INotificationService, NotificationService>();
 
 
 

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,12 @@ namespace Infrastructure.Data
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
+
+            //builder.Entity<IssueReport>()
+            //    .HasDiscriminator<EReportType>("ReportType")
+            //    .HasValue<IssueReport>(EReportType.None)
+            //    .HasValue<SocialMediaReport>(EReportType.SocialMedia);
+            //    //.HasValue<EmergencyReport>(EReportType.Emergency);
 
 
             builder.Entity<AppUser>()

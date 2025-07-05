@@ -4,9 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
 using Application.Contracts.MobileApp.MReport;
+using Application.DTOs;
 using Application.Interfaces;
 using Application.Interfaces.MobileApp;
+using Application.Interfaces.SocialMedia;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +18,13 @@ namespace API.Controllers.MobileApp
     public class MReportController : BaseApiController
     {
         private readonly IMReportRepo _reportRepo;
-        public MReportController(IMReportRepo reportRepo)
+        private readonly ISocialMediaReportService _socialMediaReportService;
+
+        public MReportController(IMReportRepo reportRepo , ISocialMediaReportService socialMediaReportService)
         {
             _reportRepo = reportRepo;
+            _socialMediaReportService = socialMediaReportService;
+
         }
 
         [HttpPost]
@@ -75,7 +82,22 @@ namespace API.Controllers.MobileApp
                 onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
-       
+        [HttpPost("social-media/share")]
+        [Authorize]
+        public async Task<IActionResult> ShareReportByUser([FromBody] ShareReportRequest request)
+        {
+            var userId = User.GetUserId();
+            var userToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var result = await _socialMediaReportService.ShareReportAsync(request, false, userId, userToken);
+
+            return result.Match(
+                onSuccess: () => Ok(new { message = "Report shared successfully on social media." }),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
+            );
+        }
+
+
 
     }
 }
