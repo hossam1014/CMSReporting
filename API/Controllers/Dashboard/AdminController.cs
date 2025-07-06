@@ -36,9 +36,18 @@ namespace API.Controllers.Dashboard
         }
 
         [HttpPost("send")]
-        public async Task<IActionResult> SendNotification([FromBody] NotificationMessage request)
+        public async Task<IActionResult> SendNotification([FromBody] NotificationRequest request)
         {
-            await _notificationService.PublishNotificationAsync(request, "user.notification.created");
+            var message = new NotificationMessage
+            {
+                Title = request.Title,
+                Body = request.Body,
+                Channels = request.Channels,
+                Type = NotificationType.SystemWide,  
+                Category = NotificationCategory.Alert 
+            };
+
+            await _notificationService.PublishNotificationAsync(message, "user.notification.created");
             return Ok("Notification sent.");
         }
 

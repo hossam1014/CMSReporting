@@ -51,8 +51,8 @@ namespace Infrastructure.Data
             //    .HasDiscriminator<EReportType>("ReportType")
             //    .HasValue<IssueReport>(EReportType.None)
             //    .HasValue<SocialMediaReport>(EReportType.SocialMedia);
-            //    //.HasValue<EmergencyReport>(EReportType.Emergency);
-
+            //.HasValue<EmergencyReport>(EReportType.Emergency);
+            
 
             builder.Entity<AppUser>()
                 .HasMany(ur => ur.UserRoles)

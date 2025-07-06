@@ -24,9 +24,9 @@ namespace API.Controllers.Dashboard
         [HttpGet]
         [Authorize(Policy = "AdminPolicy")]
 
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] bool onlyMobile = false)
         {
-            var users = await _userService.GetUsersWithRolesAsync();
+            var users = await _userService.GetUsersWithRolesAsync(onlyMobile);
             return Ok(users);
         }
 
@@ -60,5 +60,54 @@ namespace API.Controllers.Dashboard
             if (!result) return BadRequest("Error changing password");
             return Ok("Password changed successfully");
         }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile()
+        {
+            var currentUserId = _userManager.GetUserId(User);
+            var profile = await _userService.GetProfileAsync(currentUserId);
+
+            if (profile == null)
+                return NotFound("User not found.");
+
+            return Ok(profile);
+        }
+
+        [HttpPut("profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+        {
+            var userId = _userManager.GetUserId(User);
+            var result = await _userService.UpdateProfileAsync(userId, dto);
+
+            if (!result)
+                return BadRequest("Failed to update profile");
+
+            return Ok("Profile updated successfully");
+        }
+
+        [HttpPut("{id}/reset-password")]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> ResetPassword(string id, [FromBody] ResetPasswordDto dto)
+        {
+            var result = await _userService.ResetPasswordAsync(id, dto.NewPassword);
+            if (!result) return BadRequest("Failed to reset password.");
+
+            return Ok("Password reset successfully.");
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result)
+                return NotFound("User not found or could not be deleted.");
+
+            return Ok("User deleted successfully.");
+        }
+
     }
 }

@@ -13,12 +13,13 @@ namespace Domain.Events
     {
         public string Title { get; set; } = string.Empty;
         public string Body { get; set; } = string.Empty;
-        public NotificationType Type { get; set; }
         public List<ChannelType> Channels { get; set; } = new();
+
+        public NotificationType Type { get; set; } = NotificationType.SystemWide;
+        public NotificationCategory Category { get; set; } = NotificationCategory.Alert;
         public List<string>? TargetUsers { get; set; }
-        public NotificationCategory Category { get; set; }
-        public List<string>? ExternalEmails { get; set; }
-        public List<string>? ExternalPhoneNumbers { get; set; }
+       // public List<string>? ExternalEmails { get; set; }
+       // public List<string>? ExternalPhoneNumbers { get; set; }
 
     }
 

@@ -23,5 +23,10 @@
     "Name": "User",
     "NameEN": "Regular User",
     "NameAR": "مستخدم عادي"
+  },
+  {
+    "Name": "MobileUser",
+    "NameEN": "Mobile User",
+    "NameAR": "مستخدم موبايل"
   }
 ]

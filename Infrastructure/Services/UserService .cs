@@ -21,7 +21,7 @@ public class UserService : IUserService
 
     }
 
-    public async Task<List<UserWithRolesDto>> GetUsersWithRolesAsync()
+    public async Task<List<UserWithRolesDto>> GetUsersWithRolesAsync(bool onlyMobile = false)
     {
         var users = await _userManager.Users
             .Include(u => u.UserRoles)
@@ -33,8 +33,11 @@ public class UserService : IUserService
             Id = u.Id,
             Email = u.Email,
             FullName = u.FullName,
+           PhoneNumber = u.PhoneNumber,
             Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList()
         }).ToList();
+
+        
     }
 
     public async Task<bool> CreateUserAsync(CreateUserDto dto)
@@ -124,6 +127,60 @@ public class UserService : IUserService
 
         var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
         return result.Succeeded;
+    }
+
+    public async Task<UserProfileDto> GetProfileAsync(string userId)
+    {
+        var user = await _userManager.Users
+        .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+        .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null) return null;
+
+        return new UserProfileDto
+        {
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            FullName = user.FullName,
+            PhoneNumber = user.PhoneNumber,
+            Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList()
+        };
+    }
+    public async Task<bool> UpdateProfileAsync(string userId, UpdateProfileDto dto)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        user.FirstName = dto.FirstName;
+        user.LastName = dto.LastName;
+        user.FullName = $"{dto.FirstName} {dto.LastName}".Trim();
+        user.PhoneNumber = dto.PhoneNumber;
+
+        await _userManager.UpdateAsync(user);
+        return true;
+    }
+
+    public async Task<bool> ResetPasswordAsync(string userId, string newPassword)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+        return result.Succeeded;
+    }
+    public async Task<bool> DeleteUserAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return false;
+
+        user.IsDeleted = true;
+        await _userManager.UpdateAsync(user);
+
+        return true;
     }
 
 }

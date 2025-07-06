@@ -77,15 +77,31 @@ public class SocialMediaReportService : ISocialMediaReportService
     }
     private async Task SaveSharedReportAsync(IssueReport report, string caption)
     {
-        report.ReportType = EReportType.SocialMedia;
+        var socialReport = new SocialMediaReport
+        {
+            Description = report.Description,
+            ImageUrl = report.ImageUrl,
+            IssueCategoryId = report.IssueCategoryId,
+            MobileUserId = report.MobileUserId,
+            ReportStatus = report.ReportStatus,
+            DateIssued = report.DateIssued,
+            Latitude = report.Latitude,
+            Longitude = report.Longitude,
+            Address = report.Address,
+            Content = caption,
+            CreatedAt = DateTime.UtcNow,
+            ReportType = EReportType.SocialMedia
+        };
 
-
-
-        _context.Entry(report).State = EntityState.Modified;
-
-       // _context.IssueReports.Update(report);
-
+        _context.SocialMediaReports.Add(socialReport);
         await _context.SaveChangesAsync();
     }
+    //    report.ReportType = EReportType.SocialMedia;
+    //   // _context.Entry(report).State = EntityState.Modified;
 
+    //    _context.IssueReports.Update(report);
+
+    //    await _context.SaveChangesAsync();
 }
+
+

@@ -29,6 +29,10 @@ namespace Application.Repositories.Dashboard
 
             if (user is null) return Result.Failure<LoginResponse>(AuthErrors.UserNotFound);
 
+            if (user.IsDeleted)
+                return Result.Failure<LoginResponse>(AuthErrors.UserDeleted);
+
+
             var checkPasswordResult = await _userManager.CheckPasswordAsync(user, request.Password);
 
             if (!checkPasswordResult) return Result.Failure<LoginResponse>(AuthErrors.InvalidCredentials);

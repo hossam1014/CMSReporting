@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Extensions;
 using Application.Contracts.MobileApp.MReport;
 using Application.DTOs;
+using Application.Helpers.FilterParams;
 using Application.Interfaces;
 using Application.Interfaces.MobileApp;
 using Application.Interfaces.SocialMedia;
@@ -19,12 +20,13 @@ namespace API.Controllers.MobileApp
     {
         private readonly IMReportRepo _reportRepo;
         private readonly ISocialMediaReportService _socialMediaReportService;
+        private readonly IMEmergencyReportRepo _emergencyReportRepo;
 
-        public MReportController(IMReportRepo reportRepo , ISocialMediaReportService socialMediaReportService)
+        public MReportController(IMReportRepo reportRepo , ISocialMediaReportService socialMediaReportService, IMEmergencyReportRepo emergencyReportRepo)
         {
             _reportRepo = reportRepo;
             _socialMediaReportService = socialMediaReportService;
-
+            _emergencyReportRepo = emergencyReportRepo;
         }
 
         [HttpPost]
@@ -70,6 +72,17 @@ namespace API.Controllers.MobileApp
             );
         }
 
+        [HttpGet("emergency-reports")]
+        [Authorize(Policy = "DashboardPolicy")]
+        public async Task<IActionResult> GetEmergencyReports([FromQuery] EmergencyQueryParams queryParams)
+        {
+            var result = await _emergencyReportRepo.GetEmergencyReportsAsync(queryParams);
+
+            return result.Match(
+                onSuccess: () => Ok(result),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
+            );
+        }
 
 
         [HttpGet("my-reports")]
