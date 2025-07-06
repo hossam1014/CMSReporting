@@ -46,7 +46,10 @@ public class UserService : IUserService
         {
             Email = dto.Email,
             UserName = dto.Email,
-            FullName = dto.FullName,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            FullName = $"{dto.FirstName} {dto.LastName}".Trim(),
+            PhoneNumber = dto.PhoneNumber,
             IsActive = true,
             RegisterDate = DateTime.UtcNow,
             LastSeen = DateTime.UtcNow
@@ -54,7 +57,6 @@ public class UserService : IUserService
 
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded) return false;
-
         if (dto.CategoryIds != null && dto.CategoryIds.Any())
         {
             foreach (var catId in dto.CategoryIds)
@@ -69,7 +71,7 @@ public class UserService : IUserService
             await _context.SaveChangesAsync();
         }
 
-       
+
 
         foreach (var role in dto.Roles)
         {
@@ -153,14 +155,21 @@ public class UserService : IUserService
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) return false;
 
-        user.FirstName = dto.FirstName;
-        user.LastName = dto.LastName;
-        user.FullName = $"{dto.FirstName} {dto.LastName}".Trim();
-        user.PhoneNumber = dto.PhoneNumber;
+        // can update one or more 
+        user.FirstName = dto.FirstName ?? user.FirstName;
+        user.LastName = dto.LastName ?? user.LastName;
+        user.PhoneNumber = dto.PhoneNumber ?? user.PhoneNumber;
+
+        
+        if (dto.FirstName != null || dto.LastName != null)
+        {
+            user.FullName = $"{user.FirstName} {user.LastName}".Trim();
+        }
 
         await _userManager.UpdateAsync(user);
         return true;
     }
+
 
     public async Task<bool> ResetPasswordAsync(string userId, string newPassword)
     {
