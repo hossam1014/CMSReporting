@@ -21,6 +21,7 @@ using Application.Interfaces.SocialMedia;
 using Infrastructure.Options;
 using System.Text.Json.Serialization;
 using Domain.Events;
+using Infrastructure.Models;
 
 
 

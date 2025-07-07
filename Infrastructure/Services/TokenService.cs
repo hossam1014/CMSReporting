@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using API.Extensions;
@@ -27,7 +27,7 @@ namespace Infrastructure.Services
             // _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             _jwtConfigurations = options.Value;
 
-
+          
         }
 
         public async Task<(string token, int expiresIn)> CreateToken(AppUser user)
@@ -39,7 +39,11 @@ namespace Infrastructure.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
             };
 
+            Console.WriteLine($"Creating token for user: {user.UserName}, ID: {user.Id}");
+
             var roles = await _userManager.GetRolesAsync(user);
+            Console.WriteLine($"Roles: {string.Join(",", roles)}");
+
 
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 

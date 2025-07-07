@@ -21,16 +21,18 @@ namespace API.Controllers.Dashboard
         }
 
 
-        // localhost:5000/api/Auth/login
-        [HttpPost("login")]
+       // localhost:5000/api/Auth/login
+       [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var result = await _authRepo.Login(request);
 
             return result.Match(
-                onSuccess : () => Ok(result),
-                onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
+                onSuccess: () => Ok(result),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
+
+
     }
 }

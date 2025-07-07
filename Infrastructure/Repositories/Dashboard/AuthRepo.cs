@@ -54,4 +54,5 @@ namespace Application.Repositories.Dashboard
             return Result.Success(result);
         }
     }
+
 }
