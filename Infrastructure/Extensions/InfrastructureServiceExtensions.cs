@@ -48,7 +48,7 @@ namespace Infrastructure.Extensions
             // Repositories
       services.AddScoped<IReportRepo, ReportRepo>();
       services.AddScoped<IMEmergencyReportRepo, MEmergencyReportRepo>();
-      services.AddScoped<IMNotificationRepo, MNotificationRepo>();
+      //services.AddScoped<IMNotificationRepo, MNotificationRepo>();
       services.AddScoped<IFileRepo, FileRepo>();
       services.AddScoped<IMReportRepo, MReportRepo>();
       services.AddScoped<IRoleService, RoleService>();

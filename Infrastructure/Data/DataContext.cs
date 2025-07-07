@@ -28,8 +28,8 @@ namespace Infrastructure.Data
         public DbSet<MobileUser> MobileUsers { get; set; }
         public DbSet<EmergencyReport> EmergencyReports { get; set; }
         public DbSet<EmergencyService> EmergencyServices { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationUser> NotificationUsers { get; set; }
+        //public DbSet<Notification> Notifications { get; set; }
+       // public DbSet<NotificationUser> NotificationUsers { get; set; }
         public DbSet<FeedBack> FeedBacks { get; set; }
         public DbSet<IssueCategory> IssueCategories { get; set; }
         public DbSet<IssueReport> IssueReports { get; set; }

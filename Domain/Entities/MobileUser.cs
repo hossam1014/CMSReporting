@@ -19,7 +19,7 @@ namespace Domain.Entities
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public ICollection<NotificationUser> NotificationUsers { get; set; }
+      //  public ICollection<NotificationUser> NotificationUsers { get; set; }
 
         public ICollection<FeedBack> FeedBacks { get; set; }
 
