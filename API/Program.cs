@@ -151,12 +151,12 @@ using (IServiceScope scope = app.Services.CreateScope())
     app.UseSwaggerUI();
 // }
 
-app.Use(async (context, next) =>
-{
-    Console.WriteLine($"\n[Endpoint]: {context.Request.Method} {context.Request.Path}");
-    await next();
-    Console.WriteLine($"[Status Code]: {context.Response.StatusCode}\n");
-});
+// app.Use(async (context, next) =>
+// {
+//     Console.WriteLine($"\n[Endpoint]: {context.Request.Method} {context.Request.Path}");
+//     await next();
+//     Console.WriteLine($"[Status Code]: {context.Response.StatusCode}\n");
+// });
 
 app.UseRouting();
 
