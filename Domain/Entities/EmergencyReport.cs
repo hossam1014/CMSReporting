@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    [Table("EmergencyReports")]
+    //[Table("EmergencyReports")]
     public class EmergencyReport: IssueReport
     {
         public int EmergencyServiceId { get; set; }

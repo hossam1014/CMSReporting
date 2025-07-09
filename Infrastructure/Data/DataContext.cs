@@ -26,7 +26,7 @@ namespace Infrastructure.Data
         {
         }
         public DbSet<MobileUser> MobileUsers { get; set; }
-        public DbSet<EmergencyReport> EmergencyReports { get; set; }
+        //public DbSet<EmergencyReport> EmergencyReports { get; set; }
         public DbSet<EmergencyService> EmergencyServices { get; set; }
         //public DbSet<Notification> Notifications { get; set; }
        // public DbSet<NotificationUser> NotificationUsers { get; set; }
@@ -38,7 +38,7 @@ namespace Infrastructure.Data
 
         public DbSet<IssueReportStatusHistory> ReportStatusHistories { get; set; }
 
-        public DbSet<SocialMediaReport> SocialMediaReports { get; set; }
+       // public DbSet<SocialMediaReport> SocialMediaReports { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -47,12 +47,12 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(builder);
 
-            //builder.Entity<IssueReport>()
-            //    .HasDiscriminator<EReportType>("ReportType")
-            //    .HasValue<IssueReport>(EReportType.None)
-            //    .HasValue<SocialMediaReport>(EReportType.SocialMedia);
-            //.HasValue<EmergencyReport>(EReportType.Emergency);
-            
+            builder.Entity<IssueReport>()
+                .HasDiscriminator<EReportType>("ReportType")
+                .HasValue<IssueReport>(EReportType.None)
+                .HasValue<SocialMediaReport>(EReportType.SocialMedia)
+                .HasValue<EmergencyReport>(EReportType.Emergency);
+
 
             builder.Entity<AppUser>()
                 .HasMany(ur => ur.UserRoles)

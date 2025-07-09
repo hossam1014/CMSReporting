@@ -26,6 +26,7 @@ public class SocialMediaReportService : ISocialMediaReportService
         _apiOptions = apiOptions.Value;
     }
 
+
     public async Task<Result> ShareReportAsync(ShareReportRequest request, bool isAdmin, string userId = null, string userToken = null)
     {
         IssueReport report;
@@ -69,6 +70,8 @@ public class SocialMediaReportService : ISocialMediaReportService
             response = await client.PostAsJsonAsync(_apiOptions.UserShareUrl, externalRequest);
         }
 
+
+
         if (!response.IsSuccessStatusCode)
             return Result.Failure(SocialMediaErrors.ShareFailed);
 
@@ -93,9 +96,20 @@ public class SocialMediaReportService : ISocialMediaReportService
             ReportType = EReportType.SocialMedia
         };
 
-        _context.SocialMediaReports.Add(socialReport);
+        _context.IssueReports.Add(socialReport);
         await _context.SaveChangesAsync();
     }
+    //private async Task SaveSharedReportAsync(IssueReport report, string caption)
+    //{
+    //    var socialReport = new SocialMediaReport
+    //    {
+
+    //        ReportType = EReportType.SocialMedia
+    //    };
+
+    //    _context.IssueReports.Add(socialReport);
+    //    await _context.SaveChangesAsync();
+    //}
     //    report.ReportType = EReportType.SocialMedia;
     //   // _context.Entry(report).State = EntityState.Modified;
 

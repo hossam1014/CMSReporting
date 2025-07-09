@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -147,7 +147,7 @@ namespace Application.Repositories.MobileApp
 
             };
 
-            await _context.EmergencyReports.AddAsync(report);
+            await _context.IssueReports.AddAsync(report);   // ه////
             await _context.SaveChangesAsync();
 
 

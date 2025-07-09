@@ -35,7 +35,7 @@ namespace Infrastructure.Repositories.MobileApp
             report.IssueCategoryId = reportCategory.Id;
             report.DateIssued = DateTime.UtcNow;
 
-            await _context.EmergencyReports.AddAsync(report);
+            await _context.IssueReports.AddAsync(report); // ////
             await _context.SaveChangesAsync();
 
             return Result.Success();
@@ -43,7 +43,8 @@ namespace Infrastructure.Repositories.MobileApp
 
         public async Task<Result<PagedList<EmergencyReportDto>>> GetEmergencyReportsAsync(EmergencyQueryParams queryParams, string language = "ar")
         {
-            var query = _context.EmergencyReports
+            var query = _context.IssueReports /////
+                .OfType<EmergencyReport>()  // / // 
                 .Include(r => r.EmergencyService)
                 .Include(r => r.IssueCategory)
                 .Include(r => r.MobileUser)
@@ -66,7 +67,7 @@ namespace Infrastructure.Repositories.MobileApp
                 .AsNoTracking()
                 .AsQueryable();
 
-            var projected = query.OrderByDescending(r => r.DateIssued)
+            var projected = query.OrderByDescending(r => r.DateIssued)    // ////// 
                 .Select(r => new EmergencyReportDto
                 {
                     Id = r.Id,
