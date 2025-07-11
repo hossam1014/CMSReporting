@@ -19,6 +19,8 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using NotificationService.Models;
+using Application.Interfaces.NotificationService;
 
 namespace Infrastructure.Repositories.Dashboard
 {
@@ -27,12 +29,14 @@ namespace Infrastructure.Repositories.Dashboard
         private readonly IMapper _mapper;
         private readonly DataContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly INotificationService _notificationService;
 
-        public ReportRepo(DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public ReportRepo(DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor, INotificationService notificationService)
         {
             _mapper = mapper;
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _notificationService = notificationService;
         }
         public async Task<Result<PagedList<ReportResponse>>> GetAllReports(BaseParams reportParams)
         {
@@ -128,12 +132,25 @@ namespace Infrastructure.Repositories.Dashboard
                 CreatedAt = DateTime.UtcNow,
                 ReportStatus = changeReportStatus.Status,
                 UserId = userId,
-                 Comment = changeReportStatus.Comment
+                Comment = changeReportStatus.Comment
             };
 
             await _context.ReportStatusHistories.AddAsync(newRecord);
 
             await _context.SaveChangesAsync();
+
+            // Notify user about status change
+            var notification = new NotificationMessage
+            {
+                Title = changeReportStatus.Status == EReportStatus.Resolved ? "تم حل مشكلتك" : "تحديث حالة تقريرك",
+                Body = $"تقريرك رقم {report.Id} تم تحديث حالته إلى {changeReportStatus.Status}",
+                Channels = new() { ChannelType.Push, ChannelType.Email },
+                Type = NotificationType.UserSpecific,
+                TargetUsers = new List<string> { report.MobileUserId },
+                Category = NotificationCategory.Update
+            };
+
+            await _notificationService.PublishNotificationAsync(notification, "user.notification.created");
 
             return Result.Success();
         }

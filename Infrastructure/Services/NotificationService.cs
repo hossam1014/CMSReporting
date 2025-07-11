@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces.NotificationService;
 using Domain.Enums;
-using Domain.Events;
 using MassTransit;
 using MassTransit.Transports;
+using NotificationService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services
 {
-    public class NotificationService : INotificationService
+    public class NotificationServiceImpl : INotificationService
     {
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public NotificationService(IPublishEndpoint publishEndpoint)
+        public NotificationServiceImpl(IPublishEndpoint publishEndpoint)
         {
             _publishEndpoint = publishEndpoint;
         }

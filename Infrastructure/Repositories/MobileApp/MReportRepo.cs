@@ -17,6 +17,7 @@ using Domain.Enums;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Repositories.MobileApp
 {
@@ -24,15 +25,24 @@ namespace Application.Repositories.MobileApp
     {
         private readonly IMapper _mapper;
         private readonly IFileRepo _fileRepo;
-        // private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAIClassifierService _aiClassifierService;
+        private readonly ILogger<MReportRepo> _logger;
 
-        public MReportRepo(DataContext context, IMapper mapper, IFileRepo fileRepo, IHttpContextAccessor httpContextAccessor)
+        public MReportRepo(
+            DataContext context,
+            IMapper mapper,
+            IFileRepo fileRepo,
+            IHttpContextAccessor httpContextAccessor,
+            IAIClassifierService aiClassifierService,
+            ILogger<MReportRepo> logger)
             : base(context, mapper)
         {
             _mapper = mapper;
             _fileRepo = fileRepo;
             _httpContextAccessor = httpContextAccessor;
+            _aiClassifierService = aiClassifierService;
+            _logger = logger;
         }
 
         public async Task<Result> AddReport(MAddReport addReport)
@@ -47,11 +57,35 @@ namespace Application.Repositories.MobileApp
                 return Result.Failure(mobileUserResult.Error);
 
             var reportCategory = await _context.IssueCategories
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Key == addReport.IssueCategoryKey);
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Key == addReport.IssueCategoryKey);
 
             if (reportCategory == null)
                 return Result.Failure<MReportResponse>(MReportErrors.CategoryNotFound);
+
+            var classificationResult = await _aiClassifierService.ClassifyTextAsync(addReport.Description);
+            if (classificationResult.IsSuccess)
+            {
+                
+                // Now we can use the structured classification result
+                var classification = classificationResult.Value;
+
+                // Find the report category first
+                var aiReportCategory = await _context.IssueCategories
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Key == classification.Subcategory || x.Key == classification.Category);
+
+                reportCategory = aiReportCategory ?? reportCategory;
+
+                // Example: Log the classification result
+                _logger.LogInformation(
+                    "Report classified as Category: {Category}, Priority: {Priority}, Subcategory: {Subcategory}",
+                    classification.Category,
+                    classification.Priority,
+                    classification.Subcategory);
+
+            }
+
 
             string imageUrl = null;
             if (addReport.Image != null)

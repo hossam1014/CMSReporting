@@ -55,8 +55,10 @@ namespace Infrastructure.Extensions
       services.AddScoped<ICategoryRepo, CategoryRepo>();
       services.AddScoped<ISocialMediaReportService, SocialMediaReportService>();
 
-     services.AddScoped<INotificationService, NotificationService>();
+     services.AddScoped<INotificationService, NotificationServiceImpl>();
 
+     services.AddHttpClient();
+     services.AddScoped<IAIClassifierService, AIClassifierService>();
 
 
             // // Serilog
