@@ -18,6 +18,7 @@ namespace Application.Interfaces.MobileApp
         Task<Result> AddFeedback(FeedBack feedback);
         Task<List<FeedBack>> GetAllFeedbacks();
         Task<Result<bool>> UpdateLocationAsync(string userId, UpdateLocationRequest request);
-
+        
+        // Task<Result<string>> ClassifyReportTextAsync(string text);
     }
 }

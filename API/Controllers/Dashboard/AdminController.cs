@@ -2,10 +2,10 @@
 using Application.DTOs;
 using Application.Interfaces.NotificationService;
 using Application.Interfaces.SocialMedia;
-using Domain.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NotificationService.Models;
 
 namespace API.Controllers.Dashboard
 {

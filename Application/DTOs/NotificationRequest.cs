@@ -1,4 +1,4 @@
-﻿using Domain.Events;
+﻿using NotificationService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

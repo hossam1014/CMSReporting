@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Domain.Events
+namespace NotificationService.Models
 {
 
     public class NotificationMessage
@@ -18,8 +18,8 @@ namespace Domain.Events
         public NotificationType Type { get; set; } = NotificationType.SystemWide;
         public NotificationCategory Category { get; set; } = NotificationCategory.Alert;
         public List<string>? TargetUsers { get; set; }
-       // public List<string>? ExternalEmails { get; set; }
-       // public List<string>? ExternalPhoneNumbers { get; set; }
+        public List<string>? ExternalEmails { get; set; }
+        public List<string>? ExternalPhoneNumbers { get; set; }
 
     }
 
