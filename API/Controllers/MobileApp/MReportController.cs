@@ -97,18 +97,27 @@ namespace API.Controllers.MobileApp
         }
         [HttpPost("social-media/share")]
         [Authorize]
-        public async Task<IActionResult> ShareReportByUser([FromBody] ShareReportRequest request)
+        public async Task<IActionResult> ShareReportByUser([FromBody] UserShareReportRequest request)
         {
             var userId = User.GetUserId();
             var userToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var result = await _socialMediaReportService.ShareReportAsync(request, false, userId, userToken);
+            var result = await _socialMediaReportService.ShareReportAsync(
+                new ShareReportRequest
+                {
+                    ReportId = request.ReportId
+                },
+                false, // isAdmin
+                userId,
+                userToken
+            );
 
             return result.Match(
                 onSuccess: () => Ok(new { message = "Report shared successfully on social media." }),
                 onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
+
 
 
 

@@ -50,34 +50,37 @@ public class SocialMediaReportService : ISocialMediaReportService
                 return Result.Failure(SocialMediaErrors.ReportNotFound);
         }
 
-        var externalRequest = new ExternalShareRequest
-        {
-            Media = request.Media,
-            PostCaption = request.Caption,
-            Tag = request.Tag
-        };
-
         var client = _httpClientFactory.CreateClient();
-
         HttpResponseMessage response;
+
         if (isAdmin)
         {
+            // ✅ Admin بيبعت كامل الداتا
+            var externalRequest = new ExternalShareRequest
+            {
+                Media = request.Media,
+                PostCaption = request.Caption,
+                Tag = request.Tag
+            };
+
             response = await client.PostAsJsonAsync(_apiOptions.AdminShareUrl, externalRequest);
         }
         else
         {
+            // ✅ User مش بيبعت اي حاجة غير Authorization
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {userToken}");
-            response = await client.PostAsJsonAsync(_apiOptions.UserShareUrl, externalRequest);
+            response = await client.PostAsync(_apiOptions.UserShareUrl, null);
         }
-
-
 
         if (!response.IsSuccessStatusCode)
             return Result.Failure(SocialMediaErrors.ShareFailed);
 
-        await SaveSharedReportAsync(report, request.Caption);
+        // ✅ بنسجل مشاركة البلاغ
+        await SaveSharedReportAsync(report, isAdmin ? request.Caption : null);
+
         return Result.Success();
     }
+
 
     private async Task SaveSharedReportAsync(IssueReport report, string caption)
     {
@@ -97,7 +100,7 @@ public class SocialMediaReportService : ISocialMediaReportService
             Latitude = report.Latitude,
             Longitude = report.Longitude,
             Address = report.Address,
-            Content = caption,
+            Content = caption ?? "",
             CreatedAt = DateTime.UtcNow,
             Likes = 0,
             Shares = 0,
