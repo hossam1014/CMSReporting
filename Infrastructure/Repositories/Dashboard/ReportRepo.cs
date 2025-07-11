@@ -220,46 +220,85 @@ namespace Infrastructure.Repositories.Dashboard
             if (userId == null)
                 return Result.Failure<PagedList<SocialMediaReportDto>>(AuthErrors.Unauthorized);
 
+
             var query = _context.IssueReports
-                .OfType<SocialMediaReport>()
-                .Include(r => r.IssueCategory)
-                .Include(r => r.MobileUser)
-                .Where(x =>
-                    !x.IsDeleted &&
-                    (
-                        string.IsNullOrEmpty(reportParams.Keyword) ||
-                        x.Description.ToLower().Contains(reportParams.Keyword.ToLower()) ||
-                        x.Content.ToLower().Contains(reportParams.Keyword.ToLower()) ||
-                        (!string.IsNullOrEmpty(x.MobileUser.FullName) &&
-                         x.MobileUser.FullName.ToLower().Contains(reportParams.Keyword.ToLower())) ||
-                        (!string.IsNullOrEmpty(x.MobileUser.PhoneNumber) &&
-                         x.MobileUser.PhoneNumber.ToLower().Contains(reportParams.Keyword.ToLower()))
-                    ) &&
-                    (reportParams.From == null || x.CreatedAt >= reportParams.From) &&
-                    (reportParams.To == null || x.CreatedAt <= reportParams.To)
-                )
-                .AsNoTracking()
-                .AsQueryable();
+        .OfType<SocialMediaReport>() // ده هيضمن انه يجيب بس الـ SocialMediaReport
+        .Include(r => r.IssueCategory)
+        .Include(r => r.MobileUser)
+        .Where(x =>
+        !x.IsDeleted &&
+        (
+            string.IsNullOrEmpty(reportParams.Keyword) ||
+            x.Description.ToLower().Contains(reportParams.Keyword.ToLower()) ||
+            x.Content.ToLower().Contains(reportParams.Keyword.ToLower()) ||
+            (!string.IsNullOrEmpty(x.MobileUser.FullName) &&
+             x.MobileUser.FullName.ToLower().Contains(reportParams.Keyword.ToLower())) ||
+            (!string.IsNullOrEmpty(x.MobileUser.PhoneNumber) &&
+             x.MobileUser.PhoneNumber.ToLower().Contains(reportParams.Keyword.ToLower()))
+        ) &&
+        (reportParams.From == null || x.CreatedAt >= reportParams.From) &&
+        (reportParams.To == null || x.CreatedAt <= reportParams.To)
+    )
+            .AsNoTracking()
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => new SocialMediaReportDto
+    {
+        ReportId = r.Id.ToString(),
+        Description = r.Description,
+        PhotoUrl = r.ImageUrl,
+        IssueCategory = r.IssueCategory != null
+            ? (language == "en" ? r.IssueCategory.NameEN : r.IssueCategory.NameAR)
+            : null,
+        PostedAt = r.CreatedAt,
+        Likes = r.Likes,
+        Shares = r.Shares,
+        CommentsCount = r.CommentsCount,
+        PostUrl = r.PostUrl
+    });
 
-            var projectedQuery = query
-                .OrderByDescending(r => r.CreatedAt)
-                .Select(r => new SocialMediaReportDto
-                {
-                    ReportId = r.Id.ToString(),
-                    Description = r.Description,
-                    PhotoUrl = r.ImageUrl,
-                    IssueCategory = r.IssueCategory != null
-                        ? (language == "en" ? r.IssueCategory.NameEN : r.IssueCategory.NameAR)
-                        : null,
-                    PostedAt = r.CreatedAt,
-                    Likes = r.Likes,
-                    Shares = r.Shares,
-                    CommentsCount = r.CommentsCount,
-                    PostUrl = r.PostUrl
-                });
-
-            var pagedList = await PagedList<SocialMediaReportDto>.CreateAsync(projectedQuery, reportParams);
+            var pagedList = await PagedList<SocialMediaReportDto>.CreateAsync(query, reportParams);
             return Result.Success(pagedList);
+
+            //var query = _context.IssueReports
+            //    .OfType<SocialMediaReport>()
+            //    .Include(r => r.IssueCategory)
+            //    .Include(r => r.MobileUser)
+            //    .Where(x =>
+            //        !x.IsDeleted &&
+            //        (
+            //            string.IsNullOrEmpty(reportParams.Keyword) ||
+            //            x.Description.ToLower().Contains(reportParams.Keyword.ToLower()) ||
+            //            x.Content.ToLower().Contains(reportParams.Keyword.ToLower()) ||
+            //            (!string.IsNullOrEmpty(x.MobileUser.FullName) &&
+            //             x.MobileUser.FullName.ToLower().Contains(reportParams.Keyword.ToLower())) ||
+            //            (!string.IsNullOrEmpty(x.MobileUser.PhoneNumber) &&
+            //             x.MobileUser.PhoneNumber.ToLower().Contains(reportParams.Keyword.ToLower()))
+            //        ) &&
+            //        (reportParams.From == null || x.CreatedAt >= reportParams.From) &&
+            //        (reportParams.To == null || x.CreatedAt <= reportParams.To)
+            //    )
+            //    .AsNoTracking()
+            //    .AsQueryable();
+
+            //var projectedQuery = query
+            //    .OrderByDescending(r => r.CreatedAt)
+            //    .Select(r => new SocialMediaReportDto
+            //    {
+            //        ReportId = r.Id.ToString(),
+            //        Description = r.Description,
+            //        PhotoUrl = r.ImageUrl,
+            //        IssueCategory = r.IssueCategory != null
+            //            ? (language == "en" ? r.IssueCategory.NameEN : r.IssueCategory.NameAR)
+            //            : null,
+            //        PostedAt = r.CreatedAt,
+            //        Likes = r.Likes,
+            //        Shares = r.Shares,
+            //        CommentsCount = r.CommentsCount,
+            //        PostUrl = r.PostUrl
+            //    });
+
+            //var pagedList = await PagedList<SocialMediaReportDto>.CreateAsync(projectedQuery, reportParams);
+            //return Result.Success(pagedList);
         }
 
 

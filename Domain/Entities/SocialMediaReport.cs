@@ -13,7 +13,7 @@ namespace Domain.Entities
         public int Shares { get; set; } = 0;
 
         public string Content { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public int CommentsCount { get; set; } = 0;       
         public string PostUrl { get; set; }
     }

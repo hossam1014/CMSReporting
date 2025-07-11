@@ -78,10 +78,16 @@ public class SocialMediaReportService : ISocialMediaReportService
         await SaveSharedReportAsync(report, request.Caption);
         return Result.Success();
     }
+
     private async Task SaveSharedReportAsync(IssueReport report, string caption)
     {
+        _context.ChangeTracker.Clear();
+
+        //Console.WriteLine($"قبل: ReportType={report.ReportType}");
+
         var socialReport = new SocialMediaReport
         {
+            Id = report.Id,
             Description = report.Description,
             ImageUrl = report.ImageUrl,
             IssueCategoryId = report.IssueCategoryId,
@@ -93,12 +99,27 @@ public class SocialMediaReportService : ISocialMediaReportService
             Address = report.Address,
             Content = caption,
             CreatedAt = DateTime.UtcNow,
-            ReportType = EReportType.SocialMedia
+            Likes = 0,
+            Shares = 0,
+            CommentsCount = 0
         };
 
-        _context.IssueReports.Add(socialReport);
+        _context.IssueReports.Update(socialReport);
         await _context.SaveChangesAsync();
+
+        // هعملها override في الداتا بيز
+        await _context.Database.ExecuteSqlRawAsync(
+            "UPDATE IssueReports SET ReportType = {0} WHERE Id = {1}",
+            (int)EReportType.SocialMedia, report.Id);
+
+        var updated = await _context.IssueReports.AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == report.Id);
+
+        //Console.WriteLine($"بعد: ReportType={updated?.ReportType}");
     }
+
+
+
     //private async Task SaveSharedReportAsync(IssueReport report, string caption)
     //{
     //    var socialReport = new SocialMediaReport
@@ -107,15 +128,12 @@ public class SocialMediaReportService : ISocialMediaReportService
     //        ReportType = EReportType.SocialMedia
     //    };
 
-    //    _context.IssueReports.Add(socialReport);
+    //    _context.IssueReports.Update(report);
     //    await _context.SaveChangesAsync();
     //}
-    //    report.ReportType = EReportType.SocialMedia;
-    //   // _context.Entry(report).State = EntityState.Modified;
 
-    //    _context.IssueReports.Update(report);
 
-    //    await _context.SaveChangesAsync();
+
 }
 
 
