@@ -103,10 +103,10 @@ namespace Application.Repositories.MobileApp
             await _context.IssueReports.AddAsync(report);
             await _context.SaveChangesAsync();
 
-            return Result.Success();
+            return Result.Success(report.Id);
         }
 
-      
+
 
         public async Task<Result<List<MReportResponse>>> GetReportsByUserId()
         {

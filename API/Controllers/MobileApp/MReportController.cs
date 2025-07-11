@@ -35,10 +35,11 @@ namespace API.Controllers.MobileApp
             var result = await _reportRepo.AddReport(addReport);
 
             return result.Match(
-                onSuccess : () => Ok(result),
-                onFailure : () => result.HandleFailure(StatusCodes.Status400BadRequest)
+                onSuccess: () => Ok(result),
+                onFailure: () => result.HandleFailure(StatusCodes.Status400BadRequest)
             );
         }
+
 
         [HttpPost("update-location")]
         public async Task<IActionResult> UpdateLocation(UpdateLocationRequest request)
